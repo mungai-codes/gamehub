@@ -22,11 +22,13 @@ fun Navigation(
         composable(route = BottomNavigationItem.Home.route) {
             HomeScreen()
         }
-        composable(route = BottomNavigationItem.Saved.route) {
+
+        composable(route = BottomNavigationItem.Search.route) {
             Column(modifier = Modifier.fillMaxSize()) {
 
             }
         }
+
         composable(route = BottomNavigationItem.Settings.route) {
             Column(modifier = Modifier.fillMaxSize()) {
 

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.domain.model.Game
+import com.mungaicodes.gamehub.presentation.components.RatingCard
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
@@ -92,10 +93,7 @@ fun PopularGame(
                 )
             }
             Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = game.rating.toString(),
-                fontFamily = FontFamily(Font(R.font.tiltneon_regular))
-            )
+            RatingCard(rating = game.rating.toString(), modifier = Modifier.padding(end = 2.dp))
         }
     }
 }

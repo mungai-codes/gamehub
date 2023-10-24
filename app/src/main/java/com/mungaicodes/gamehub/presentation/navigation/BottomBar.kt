@@ -29,7 +29,7 @@ fun BottomAppBar(
 
     val items = listOf(
         BottomNavigationItem.Home,
-        BottomNavigationItem.Saved,
+        BottomNavigationItem.Search,
         BottomNavigationItem.Settings
     )
 
