@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.home.components.PopularGame
+import com.mungaicodes.gamehub.presentation.home.components.PopularGameShimmer
 import com.mungaicodes.gamehub.presentation.home.components.TrendingGame
+import com.mungaicodes.gamehub.presentation.home.components.TrendingGameShimmer
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
@@ -76,26 +78,44 @@ fun HomeScreenContent(
         ) {
 
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
+                TrendingGameShimmer(
+                    isLoading = state.loadingTrendingGames
                 ) {
-                    Text(
-                        text = "Top Trending/New",
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
+                        Text(
+                            text = "Top Trending/New",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (state.error == null) {
+                            LazyRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                items(state.trendingGames, key = { it.id }) { game ->
+                                    TrendingGame(game = game) {
 
-                        items(state.trendingGames, key = { it.id }) { game ->
-                            TrendingGame(game = game) {
-
+                                    }
+                                }
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                            ) {
+                                Text(
+                                    text = state.error,
+                                    modifier = Modifier.align(Alignment.Center),
+                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
@@ -103,28 +123,45 @@ fun HomeScreenContent(
             }
 
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(
-                            text = "all-time Popular",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Column(
-                        Modifier.padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement
-                            .spacedBy(6.dp)
-                    ) {
-                        state.popularGames.take(5).forEach { game ->
-                            PopularGame(game = game) {
-
+                PopularGameShimmer(isLoading = state.loadingPopularGames) {
+                    if (state.error == null) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(
+                                    text = "all-time Popular",
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Column(
+                                Modifier.padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement
+                                    .spacedBy(6.dp)
+                            ) {
+                                state.popularGames.take(5).forEach { game ->
+                                    PopularGame(game = game) {
+
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        ) {
+                            Text(
+                                text = state.error,
+                                modifier = Modifier.align(Alignment.Center),
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }

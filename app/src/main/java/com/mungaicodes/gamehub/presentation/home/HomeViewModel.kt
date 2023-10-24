@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -31,17 +32,23 @@ class HomeViewModel @Inject constructor(
             networkRepository.getTrendingGames().onEach { result ->
                 when (result) {
                     is Resource.Error -> {
-                        _state.update { it.copy(loading = false, error = result.message) }
+                        _state.update {
+                            it.copy(
+                                loadingTrendingGames = false,
+                                error = result.message
+                            )
+                        }
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loading = true) }
+                        _state.update { it.copy(loadingTrendingGames = true) }
+                        delay(50000)
                     }
 
                     is Resource.Success -> {
                         _state.update {
                             it.copy(
-                                loading = false,
+                                loadingTrendingGames = false,
                                 trendingGames = result.data ?: emptyList()
                             )
                         }
@@ -56,17 +63,23 @@ class HomeViewModel @Inject constructor(
             networkRepository.getPopularGames().onEach { result ->
                 when (result) {
                     is Resource.Error -> {
-                        _state.update { it.copy(loading = false, error = result.message) }
+                        _state.update {
+                            it.copy(
+                                loadingPopularGames = false,
+                                error = result.message
+                            )
+                        }
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loading = true) }
+                        _state.update { it.copy(loadingPopularGames = true) }
+                        delay(50000)
                     }
 
                     is Resource.Success -> {
                         _state.update {
                             it.copy(
-                                loading = false,
+                                loadingPopularGames = false,
                                 popularGames = result.data ?: emptyList()
                             )
                         }

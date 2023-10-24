@@ -4,9 +4,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,8 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.domain.model.Game
+import com.mungaicodes.gamehub.presentation.components.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
+import kotlin.random.Random
 
 @Composable
 fun TrendingGame(
@@ -78,4 +86,75 @@ fun TrendingGame(
             fontSize = 13.sp
         )
     }
+}
+
+@Composable
+fun TrendingGameShimmer(
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+    contentAfterLoading: @Composable () -> Unit,
+) {
+
+    if (isLoading) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(150.dp, 15.dp)
+                    .padding(start = 16.dp),
+                shape = MaterialTheme.shapes.extraSmall
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .shimmerEffect()
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                items(2) {
+                    Column(
+                        modifier = modifier
+                            .width(240.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Surface(
+                            modifier = Modifier
+                                .height(160.dp)
+                                .fillMaxWidth(),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmerEffect()
+                            )
+                        }
+                        Surface(
+                            modifier = Modifier
+                                .height(15.dp)
+                                .size(Random.nextInt(80, 180).dp, 15.dp),
+                            shape = MaterialTheme.shapes.extraSmall
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmerEffect()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        contentAfterLoading()
+    }
+
 }
