@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mungaicodes.gamehub.R
+import com.mungaicodes.gamehub.presentation.home.components.PopularGame
 import com.mungaicodes.gamehub.presentation.home.components.TrendingGame
 
 @Composable
@@ -97,6 +99,51 @@ fun HomeScreenContent(
                             }
                         }
                     }
+                }
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            text = "all-time Popular",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Column(
+                        Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement
+                            .spacedBy(6.dp)
+                    ) {
+                        state.popularGames.take(5).forEach { game ->
+                            PopularGame(game = game) {
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            text = "What you like most",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 

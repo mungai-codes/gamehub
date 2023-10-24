@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface NetworkRepository {
 
     fun getTrendingGames() : Flow<Resource<List<Game>>>
+    fun getPopularGames() : Flow<Resource<List<Game>>>
 }

@@ -13,4 +13,11 @@ interface ApiService {
         @Query("page_size") pageSize: Int = 15,
         @Query("ordering") ordering: String = "relevance"
     ) : ResponseSchema<Game>
+
+    @GET("games/lists/popular")
+    suspend fun getPopularGames(
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 15,
+        @Query("ordering") ordering: String = "relevance"
+    ) : ResponseSchema<Game>
 }

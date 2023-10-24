@@ -23,6 +23,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getTrendingGames()
+        getPopularGames()
     }
 
     fun getTrendingGames() {
@@ -42,6 +43,31 @@ class HomeViewModel @Inject constructor(
                             it.copy(
                                 loading = false,
                                 trendingGames = result.data ?: emptyList()
+                            )
+                        }
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+    fun getPopularGames() {
+        viewModelScope.launch {
+            networkRepository.getPopularGames().onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.update { it.copy(loading = false, error = result.message) }
+                    }
+
+                    is Resource.Loading -> {
+                        _state.update { it.copy(loading = true) }
+                    }
+
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                loading = false,
+                                popularGames = result.data ?: emptyList()
                             )
                         }
                     }

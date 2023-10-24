@@ -39,7 +39,7 @@ fun TrendingGame(
     ) {
         Surface(
             Modifier
-                .height(180.dp)
+                .height(160.dp)
                 .clickable { onClick() },
             shape = MaterialTheme.shapes.medium
         ) {

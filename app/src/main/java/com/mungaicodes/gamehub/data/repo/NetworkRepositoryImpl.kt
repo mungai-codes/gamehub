@@ -33,4 +33,24 @@ class NetworkRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override fun getPopularGames(): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading("Loading..."))
+            try {
+                val response = apiService.getPopularGames()
+                emit(Resource.Success(response.results))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
 }
