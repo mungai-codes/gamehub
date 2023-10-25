@@ -9,4 +9,5 @@ data class HomeUiState(
     val trendingGames: List<Game> = emptyList(),
     val popularGames: List<Game> = emptyList(),
     val error: String? = null,
+    val preview: String = ""
 )

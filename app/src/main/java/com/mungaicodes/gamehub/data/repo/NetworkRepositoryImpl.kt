@@ -2,6 +2,7 @@ package com.mungaicodes.gamehub.data.repo
 
 import com.mungaicodes.gamehub.data.remote.ApiService
 import com.mungaicodes.gamehub.domain.model.Game
+import com.mungaicodes.gamehub.domain.model.Screenshot
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +41,27 @@ class NetworkRepositoryImpl @Inject constructor(
             try {
                 val response = apiService.getPopularGames()
                 emit(Resource.Success(response.results))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGameScreenShots(gameSlug: String): Flow<Resource<List<Screenshot>>> {
+        return flow {
+            emit(Resource.Loading("Loading..."))
+            try {
+                val response = apiService.getGameScreenShots(gameSlug)
+                emit(Resource.Success(response.results))
+
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is IOException -> emit(Resource.Error("Internet connection not available!"))

@@ -36,12 +36,13 @@ import com.mungaicodes.gamehub.presentation.home.components.TrendingGameShimmer
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsState().value
-    HomeScreenContent(state)
+    HomeScreenContent(state, viewModel::onEvent)
 }
 
 @Composable
 fun HomeScreenContent(
-    state: HomeUiState
+    state: HomeUiState,
+    onEvent: (HomeScreenEvent) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
     Scaffold(
@@ -100,7 +101,7 @@ fun HomeScreenContent(
                             ) {
                                 items(state.trendingGames, key = { it.id }) { game ->
                                     TrendingGame(game = game) {
-
+                                        onEvent(HomeScreenEvent.TrendingGameClicked)
                                     }
                                 }
                             }
@@ -108,6 +109,7 @@ fun HomeScreenContent(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .padding(16.dp)
                                     .height(200.dp)
                             ) {
                                 Text(
@@ -154,6 +156,7 @@ fun HomeScreenContent(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .padding(16.dp)
                                     .height(200.dp)
                             ) {
                                 Text(

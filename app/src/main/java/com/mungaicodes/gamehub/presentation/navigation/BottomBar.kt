@@ -6,14 +6,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mungaicodes.gamehub.R
 
 
@@ -23,10 +22,6 @@ fun BottomAppBar(
     modifier: Modifier = Modifier
 ) {
 
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
-
     val items = listOf(
         BottomNavigationItem.Home,
         BottomNavigationItem.Search,
@@ -34,12 +29,13 @@ fun BottomAppBar(
     )
 
     NavigationBar(modifier = modifier) {
-        items.forEachIndexed { index, item ->
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+        items.forEach { screen ->
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
-                    selectedItemIndex = index
-                    navController.navigate(item.route) {
+                    navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -48,10 +44,10 @@ fun BottomAppBar(
                     }
                 },
                 icon = {
-                    Icon(imageVector = item.icon, contentDescription = item.label)
+                    Icon(imageVector = screen.icon, contentDescription = screen.label)
                 },
                 label = {
-                    Text(text = item.label, fontFamily = FontFamily(Font(R.font.pixelifysans)))
+                    Text(text = screen.label, fontFamily = FontFamily(Font(R.font.pixelifysans)))
                 }
             )
         }
