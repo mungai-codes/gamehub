@@ -124,20 +124,21 @@ fun HomeScreenContent(
 
             item {
                 PopularGameShimmer(isLoading = state.loadingPopularGames) {
-                    if (state.error == null) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text(
-                                    text = "all-time Popular",
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(
+                                text = "all-time Popular",
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (state.error == null) {
                             Column(
                                 Modifier.padding(horizontal = 16.dp),
                                 verticalArrangement = Arrangement
@@ -149,19 +150,19 @@ fun HomeScreenContent(
                                     }
                                 }
                             }
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        ) {
-                            Text(
-                                text = state.error,
-                                modifier = Modifier.align(Alignment.Center),
-                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                fontWeight = FontWeight.Bold
-                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                            ) {
+                                Text(
+                                    text = state.error,
+                                    modifier = Modifier.align(Alignment.Center),
+                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
@@ -173,7 +174,7 @@ fun HomeScreenContent(
                 ) {
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(
-                            text = "What you like most",
+                            text = "What you like",
                             modifier = Modifier.padding(horizontal = 16.dp),
                             fontFamily = FontFamily(Font(R.font.pixelifysans)),
                             fontWeight = FontWeight.Bold,

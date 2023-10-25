@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -42,7 +41,6 @@ class HomeViewModel @Inject constructor(
 
                     is Resource.Loading -> {
                         _state.update { it.copy(loadingTrendingGames = true) }
-                        delay(50000)
                     }
 
                     is Resource.Success -> {
@@ -73,7 +71,6 @@ class HomeViewModel @Inject constructor(
 
                     is Resource.Loading -> {
                         _state.update { it.copy(loadingPopularGames = true) }
-                        delay(50000)
                     }
 
                     is Resource.Success -> {

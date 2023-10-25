@@ -12,6 +12,6 @@ data class Game(
     val rating: Double,
     val playtime: Int,
     @field:Json(name = "esrb_rating")
-    val esrbRating: Esrb,
+    val esrbRating: Esrb?,
     val platforms: List<Platform>
 )
