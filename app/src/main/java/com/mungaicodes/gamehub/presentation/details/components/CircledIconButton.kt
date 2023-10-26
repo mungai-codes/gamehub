@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,7 @@ fun CircledIconButton(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.padding(6.dp),
+            modifier = Modifier.size(30.dp).padding(6.dp),
             tint = tint
         )
     }

@@ -1,6 +1,7 @@
 package com.mungaicodes.gamehub.data.repo
 
 import com.mungaicodes.gamehub.data.remote.ApiService
+import com.mungaicodes.gamehub.domain.model.Achievement
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.Screenshot
@@ -56,6 +57,48 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getRelatedGames(gameSlug: String): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading("Loading related games..."))
+            try {
+                val response = apiService.getRelatedGames(gameSlug)
+                emit(Resource.Success(response.results))
+
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getAdditions(gameSlug: String): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading("Loading related games..."))
+            try {
+                val response = apiService.getGameAdditions(gameSlug)
+                emit(Resource.Success(response.results))
+
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     override fun getGameDetails(gameId: String): Flow<Resource<GameDetails>> {
         return flow {
             emit(Resource.Loading("Loading game details..."))
@@ -84,6 +127,26 @@ class NetworkRepositoryImpl @Inject constructor(
                 val response = apiService.getGameScreenShots(gameSlug)
                 emit(Resource.Success(response.results))
 
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGameAchievements(gameSlug: String): Flow<Resource<List<Achievement>>> {
+        return flow {
+            emit(Resource.Loading("Loading achievements..."))
+            try {
+                val response = apiService.getGameAchievements(gameSlug)
+                emit(Resource.Success(response.results))
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is IOException -> emit(Resource.Error("Internet connection not available!"))

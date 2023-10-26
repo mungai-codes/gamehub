@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.domain.model.Game
-import com.mungaicodes.gamehub.presentation.components.RatingCard
+import com.mungaicodes.gamehub.presentation.components.DataCard
 import com.mungaicodes.gamehub.presentation.components.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
@@ -98,7 +98,7 @@ fun PopularGame(
                 )
             }
             Spacer(modifier = Modifier.width(6.dp))
-            RatingCard(rating = game.rating.toString(), modifier = Modifier.padding(end = 2.dp))
+            DataCard(rating = game.rating.toString(), modifier = Modifier.padding(end = 2.dp))
         }
     }
 }

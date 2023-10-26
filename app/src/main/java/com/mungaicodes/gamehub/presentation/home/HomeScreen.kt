@@ -32,8 +32,8 @@ import androidx.navigation.NavController
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.home.components.PopularGame
 import com.mungaicodes.gamehub.presentation.home.components.PopularGameShimmer
-import com.mungaicodes.gamehub.presentation.home.components.TrendingGame
-import com.mungaicodes.gamehub.presentation.home.components.TrendingGameShimmer
+import com.mungaicodes.gamehub.presentation.components.GameCard
+import com.mungaicodes.gamehub.presentation.components.GameCardShimmer
 import com.mungaicodes.gamehub.presentation.navigation.Screens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -97,7 +97,7 @@ fun HomeScreenContent(
         ) {
 
             item {
-                TrendingGameShimmer(
+                GameCardShimmer(
                     isLoading = state.loadingTrendingGames
                 ) {
                     Column(
@@ -118,7 +118,7 @@ fun HomeScreenContent(
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(state.trendingGames, key = { it.id }) { game ->
-                                    TrendingGame(game = game) {
+                                    GameCard(game = game) {
                                         onEvent(HomeScreenEvent.OnGameClick(game.slug))
                                     }
                                 }
@@ -195,7 +195,7 @@ fun HomeScreenContent(
                 ) {
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(
-                            text = "What you like",
+                            text = "Your faves",
                             modifier = Modifier.padding(horizontal = 16.dp),
                             fontFamily = FontFamily(Font(R.font.pixelifysans)),
                             fontWeight = FontWeight.Bold,

@@ -1,4 +1,4 @@
-package com.mungaicodes.gamehub.presentation.home.components
+package com.mungaicodes.gamehub.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import com.skydoves.landscapist.coil.CoilImage
 import kotlin.random.Random
 
 @Composable
-fun TrendingGame(
+fun GameCard(
     game: Game,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -89,7 +89,7 @@ fun TrendingGame(
 }
 
 @Composable
-fun TrendingGameShimmer(
+fun GameCardShimmer(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     contentAfterLoading: @Composable () -> Unit,

@@ -1,5 +1,7 @@
 package com.mungaicodes.gamehub.data.remote
 
+import com.mungaicodes.gamehub.domain.model.Achievement
+import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.ResponseSchema
@@ -30,6 +32,38 @@ interface ApiService {
         @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4"
     ): GameDetails
 
+    @GET("games/{game_pk}/development-team")
+    suspend fun getDevelopmentTeam(
+        @Path("game_pk") gameSlug: String,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 20,
+        @Query("ordering") ordering: String = "relevance"
+    ): ResponseSchema<Creator>
+
+    @GET("games/{id}/achievements")
+    suspend fun getGameAchievements(
+        @Path("id") gameId: String,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 10,
+        @Query("ordering") ordering: String = "relevance"
+    ): ResponseSchema<Achievement>
+
+    @GET("games/{game_pk}/additions")
+    suspend fun getGameAdditions(
+        @Path("game_pk") gameSlug: String,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 10,
+        @Query("ordering") ordering: String = "relevance"
+    ): ResponseSchema<Game>
+
+    @GET("games/{game_pk}/game-series")
+    suspend fun getRelatedGames(
+        @Path("game_pk") gameSlug: String,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 10,
+        @Query("ordering") ordering: String = "relevance"
+    ): ResponseSchema<Game>
+
     @GET("games/{game_pk}/screenshots")
     suspend fun getGameScreenShots(
         @Path("game_pk") gameSlug: String,
@@ -39,6 +73,3 @@ interface ApiService {
     ): ResponseSchema<Screenshot>
 }
 
-data class SomeObject(
-    val nothing: String
-)

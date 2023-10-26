@@ -101,29 +101,4 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getGameScreenShots() {
-        viewModelScope.launch {
-            networkRepository.getGameScreenShots("portal-2").onEach { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.update {
-                            it.copy(
-                                loadingTrendingGames = false,
-                                error = result.message
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        _state.update { it.copy(loadingTrendingGames = true) }
-                    }
-
-                    is Resource.Success -> {
-                        _state.update { it.copy(loadingTrendingGames = false) }
-                    }
-                }
-            }.launchIn(this)
-        }
-    }
-
 }
