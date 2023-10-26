@@ -4,9 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import com.mungaicodes.gamehub.presentation.details.DetailsScreen
 import com.mungaicodes.gamehub.presentation.home.HomeScreen
 
 @Composable
@@ -16,11 +20,27 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavigationItem.Home.route,
+        startDestination = Graphs.BottomBarGraph.route,
         modifier = modifier
     ) {
+        bottomBarGraph(navController = navController)
+
+        composable(
+            route = Screens.Details.routeWithArgs,
+            arguments = Screens.Details.arguments
+        ) {
+            DetailsScreen(navController = navController)
+        }
+    }
+}
+
+fun NavGraphBuilder.bottomBarGraph(navController: NavController) {
+    navigation(
+        startDestination = BottomNavigationItem.Home.route,
+        route = Graphs.BottomBarGraph.route
+    ) {
         composable(route = BottomNavigationItem.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 
         composable(route = BottomNavigationItem.Search.route) {

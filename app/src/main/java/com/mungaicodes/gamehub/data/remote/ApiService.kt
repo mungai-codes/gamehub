@@ -1,6 +1,7 @@
 package com.mungaicodes.gamehub.data.remote
 
 import com.mungaicodes.gamehub.domain.model.Game
+import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.ResponseSchema
 import com.mungaicodes.gamehub.domain.model.Screenshot
 import retrofit2.http.GET
@@ -23,6 +24,11 @@ interface ApiService {
         @Query("ordering") ordering: String = "relevance"
     ): ResponseSchema<Game>
 
+    @GET("games/{id}")
+    suspend fun getGameDetails(
+        @Path("id") gameId: String,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4"
+    ): GameDetails
 
     @GET("games/{game_pk}/screenshots")
     suspend fun getGameScreenShots(

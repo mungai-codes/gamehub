@@ -28,28 +28,35 @@ fun BottomAppBar(
         BottomNavigationItem.Settings
     )
 
-    NavigationBar(modifier = modifier) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        items.forEach { screen ->
-            NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    if (items.any { it.route == currentDestination?.route }) {
+        NavigationBar(modifier = modifier) {
+
+            items.forEach { screen ->
+                NavigationBarItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    },
+                    icon = {
+                        Icon(imageVector = screen.icon, contentDescription = screen.label)
+                    },
+                    label = {
+                        Text(
+                            text = screen.label,
+                            fontFamily = FontFamily(Font(R.font.pixelifysans))
+                        )
                     }
-                },
-                icon = {
-                    Icon(imageVector = screen.icon, contentDescription = screen.label)
-                },
-                label = {
-                    Text(text = screen.label, fontFamily = FontFamily(Font(R.font.pixelifysans)))
-                }
-            )
+                )
+            }
         }
     }
 }

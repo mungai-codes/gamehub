@@ -2,6 +2,7 @@ package com.mungaicodes.gamehub.data.repo
 
 import com.mungaicodes.gamehub.data.remote.ApiService
 import com.mungaicodes.gamehub.domain.model.Game
+import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.Screenshot
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
@@ -41,6 +42,27 @@ class NetworkRepositoryImpl @Inject constructor(
             try {
                 val response = apiService.getPopularGames()
                 emit(Resource.Success(response.results))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGameDetails(gameId: String): Flow<Resource<GameDetails>> {
+        return flow {
+            emit(Resource.Loading("Loading game details..."))
+            try {
+                val response = apiService.getGameDetails(gameId)
+                emit(Resource.Success(response))
+
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is IOException -> emit(Resource.Error("Internet connection not available!"))

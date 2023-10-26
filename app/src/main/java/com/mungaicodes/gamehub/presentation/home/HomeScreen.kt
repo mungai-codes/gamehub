@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,21 +28,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.home.components.PopularGame
 import com.mungaicodes.gamehub.presentation.home.components.PopularGameShimmer
 import com.mungaicodes.gamehub.presentation.home.components.TrendingGame
 import com.mungaicodes.gamehub.presentation.home.components.TrendingGameShimmer
+import com.mungaicodes.gamehub.presentation.navigation.Screens
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is HomeScreenUiEvent.NavigateToDetails -> {
+                    navController.navigate(Screens.Details.route + "/${event.gameId}")
+                }
+            }
+        }
+    }
+
     HomeScreenContent(state, viewModel::onEvent)
 }
 
 @Composable
 fun HomeScreenContent(
-    state: HomeUiState,
+    state: HomeScreenUiState,
     onEvent: (HomeScreenEvent) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
@@ -101,7 +119,7 @@ fun HomeScreenContent(
                             ) {
                                 items(state.trendingGames, key = { it.id }) { game ->
                                     TrendingGame(game = game) {
-                                        onEvent(HomeScreenEvent.TrendingGameClicked)
+                                        onEvent(HomeScreenEvent.OnGameClick(game.slug))
                                     }
                                 }
                             }
@@ -148,7 +166,7 @@ fun HomeScreenContent(
                             ) {
                                 state.popularGames.take(5).forEach { game ->
                                     PopularGame(game = game) {
-
+                                        onEvent(HomeScreenEvent.OnGameClick(game.slug))
                                     }
                                 }
                             }

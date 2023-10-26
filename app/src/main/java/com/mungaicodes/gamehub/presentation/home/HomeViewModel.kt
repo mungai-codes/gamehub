@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -18,8 +20,11 @@ class HomeViewModel @Inject constructor(
     private val networkRepository: NetworkRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeUiState())
+    private val _state = MutableStateFlow(HomeScreenUiState())
     val state = _state.asStateFlow()
+
+    private val _eventFlow = MutableSharedFlow<HomeScreenUiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         getTrendingGames()
@@ -28,16 +33,10 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
-            HomeScreenEvent.PopularGameClicked -> {
-
-            }
-
-            HomeScreenEvent.ShowMorePopularGames -> {
-
-            }
-
-            HomeScreenEvent.TrendingGameClicked -> {
-                getGameScreenShots()
+            is HomeScreenEvent.OnGameClick -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(HomeScreenUiEvent.NavigateToDetails(event.gameId))
+                }
             }
         }
     }

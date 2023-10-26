@@ -2,7 +2,7 @@ package com.mungaicodes.gamehub.presentation.home
 
 import com.mungaicodes.gamehub.domain.model.Game
 
-data class HomeUiState(
+data class HomeScreenUiState(
     val loadingTrendingGames: Boolean = false,
     val loadingPopularGames: Boolean = false,
     val loadingSavedGams: Boolean = false,
