@@ -6,14 +6,19 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,17 +27,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.components.DataCard
 import com.mungaicodes.gamehub.presentation.components.GameCard
 import com.mungaicodes.gamehub.presentation.details.components.Achievement
+import com.mungaicodes.gamehub.presentation.details.components.CreatorCard
 import com.mungaicodes.gamehub.presentation.details.components.Screenshot
 import com.mungaicodes.gamehub.presentation.details.components.TopBar
 import com.mungaicodes.gamehub.presentation.navigation.Screens
@@ -77,7 +86,7 @@ fun DetailsScreenContent(
         topBar = {
             TopBar(
                 gameDetails = state.gameDetails ?: return@Scaffold,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = 6.dp),
                 onAddToFavourites = { onEvent(DetailsScreenEvent.AddGameToFavourites(state.gameDetails)) },
                 onBack = { onEvent(DetailsScreenEvent.GoBack) }
             )
@@ -99,14 +108,36 @@ fun DetailsScreenContent(
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(
-                        text = game.slug,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (game.alternativeNames.isNotEmpty()) {
+                            Text(
+                                text = game.alternativeNames.joinToString(", "),
+                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        } else {
+                            Text(
+                                text = game.slug,
+                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.reddit_is_fun),
+                                contentDescription = null,
+                                modifier = Modifier.size(54.dp),
+                                tint = Color(0xFFF76904)
+                            )
+                        }
+                    }
+
                     Divider(
                         Modifier
                             .fillMaxWidth(),
@@ -118,17 +149,9 @@ fun DetailsScreenContent(
                 LazyColumn(
                     modifier = Modifier,
                     state = lazyListState,
+                    contentPadding = PaddingValues(vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-
-                    item {
-                        Text(
-                            text = "about",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                            fontWeight = FontWeight.Light
-                        )
-                    }
 
                     item {
                         Column(
@@ -146,7 +169,8 @@ fun DetailsScreenContent(
                                     Text(
                                         text = "rating",
                                         fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.Light
+                                        fontWeight = FontWeight.ExtraLight,
+                                        fontSize = 13.sp
                                     )
                                 }
                                 Column(horizontalAlignment = Alignment.Start) {
@@ -154,7 +178,8 @@ fun DetailsScreenContent(
                                     Text(
                                         text = "playtime",
                                         fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.Light
+                                        fontWeight = FontWeight.ExtraLight,
+                                        fontSize = 13.sp
                                     )
                                 }
                                 Column(horizontalAlignment = Alignment.Start) {
@@ -162,7 +187,8 @@ fun DetailsScreenContent(
                                     Text(
                                         text = "release(d)",
                                         fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.Light
+                                        fontWeight = FontWeight.ExtraLight,
+                                        fontSize = 13.sp
                                     )
                                 }
                                 Column(horizontalAlignment = Alignment.Start) {
@@ -170,7 +196,8 @@ fun DetailsScreenContent(
                                     Text(
                                         text = "esrb-rating",
                                         fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.Light
+                                        fontWeight = FontWeight.ExtraLight,
+                                        fontSize = 13.sp
                                     )
                                 }
                             }
@@ -198,6 +225,7 @@ fun DetailsScreenContent(
                                     .fillMaxWidth(),
                                 fontFamily = FontFamily(Font(R.font.tiltneon_regular))
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier.fillMaxWidth(),
                                 thickness = 1.dp,
@@ -225,8 +253,41 @@ fun DetailsScreenContent(
                                     DataCard(rating = platform.platform.name ?: "N/A")
                                 }
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier.fillMaxWidth(),
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    item {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text(
+                                text = "development-team",
+                                modifier = Modifier.padding(start = 16.dp),
+                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                fontWeight = FontWeight.Light
+                            )
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                items(state.creators, key = { it.id }) { creator ->
+                                    CreatorCard(creator = creator)
+                                }
+
+                            }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Divider(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
                                 thickness = 1.dp,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -254,6 +315,7 @@ fun DetailsScreenContent(
                                 }
 
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier
                                     .fillMaxWidth()
@@ -287,6 +349,7 @@ fun DetailsScreenContent(
                                 }
 
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier
                                     .fillMaxWidth()
@@ -320,6 +383,7 @@ fun DetailsScreenContent(
                                 }
 
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier
                                     .fillMaxWidth()
@@ -346,6 +410,7 @@ fun DetailsScreenContent(
                                     Achievement(achievement = achievement)
                                 }
                             }
+                            Spacer(modifier = Modifier.height(2.dp))
                             Divider(
                                 Modifier.fillMaxWidth(),
                                 thickness = 1.dp,

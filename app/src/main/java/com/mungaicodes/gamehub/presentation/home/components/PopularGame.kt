@@ -1,6 +1,7 @@
 package com.mungaicodes.gamehub.presentation.home.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -57,12 +60,11 @@ fun PopularGame(
             ) {
                 CoilImage(
                     imageModel = { game.backgroundImage },
-                    modifier = Modifier
-                        .size(54.dp),
+                    modifier = Modifier.size(54.dp),
                     imageOptions = ImageOptions(
-                        contentScale = ContentScale.Crop,
                         alignment = Alignment.Center,
-                        contentDescription = game.name
+                        contentDescription = game.name,
+                        contentScale = ContentScale.Crop,
                     ),
                     loading = {
                         Box(modifier = Modifier.matchParentSize()) {
@@ -74,10 +76,15 @@ fun PopularGame(
                         }
                     },
                     failure = {
-                        Text(
-                            text = "image request failed.",
-                            fontFamily = FontFamily(Font(R.font.kurale_regular))
-                        )
+                        Box(
+                            modifier = Modifier.matchParentSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "image request failed.",
+                                fontFamily = FontFamily(Font(R.font.kurale_regular))
+                            )
+                        }
                     }
                 )
             }
@@ -89,13 +96,47 @@ fun PopularGame(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Text(
-                    text = game.slug,
-                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 13.sp
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.weight(0.5f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .background(Color(0xFF51F507), CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = game.ratingsCount.toString() + " ratings",
+                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 13.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.weight(0.5f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .background(Color(0xFFF3C704), CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = game.suggestionsCount.toString() + " suggestions",
+                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 13.sp
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.width(6.dp))
             DataCard(rating = game.rating.toString(), modifier = Modifier.padding(end = 2.dp))
@@ -132,7 +173,7 @@ fun PopularGameShimmer(
                 verticalArrangement = Arrangement
                     .spacedBy(6.dp)
             ) {
-                repeat(3) {
+                repeat(5) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

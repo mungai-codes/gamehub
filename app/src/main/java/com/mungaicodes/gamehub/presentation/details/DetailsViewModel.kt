@@ -35,6 +35,7 @@ class DetailsViewModel @Inject constructor(
             getGameAchievements(gameId)
             getRelatedGames(gameId)
             getAdditions(gameId)
+            getDevelopmentTeam(gameId)
         }
     }
 
@@ -185,6 +186,36 @@ class DetailsViewModel @Inject constructor(
                             it.copy(
                                 loading = false,
                                 additions = result.data ?: emptyList()
+                            )
+                        }
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+    fun getDevelopmentTeam(gameId: String) {
+        viewModelScope.launch {
+            networkRepository.getDevelopmentTeam(gameId).onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                loading = false,
+                                error = result.message
+                            )
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _state.update { it.copy(loading = true) }
+                    }
+
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                loading = false,
+                                creators = result.data ?: emptyList()
                             )
                         }
                     }

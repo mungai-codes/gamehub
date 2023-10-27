@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -43,8 +44,7 @@ fun TopBar(
     Box(modifier = modifier.height(240.dp)) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp),
+                .wrapContentSize(),
             shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
         ) {
             Box(
@@ -54,11 +54,12 @@ fun TopBar(
                 CoilImage(
                     imageModel = { gameDetails.additionalBackgroundImage },
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxWidth()
+                        .height(220.dp),
                     imageOptions = ImageOptions(
-                        contentScale = ContentScale.Crop,
                         alignment = Alignment.Center,
-                        contentDescription = gameDetails.name
+                        contentDescription = gameDetails.name,
+                        contentScale = ContentScale.Crop
                     ),
                     loading = {
                         Box(modifier = Modifier.matchParentSize()) {
@@ -70,16 +71,21 @@ fun TopBar(
                         }
                     },
                     failure = {
-                        Text(
-                            text = "image request failed.",
-                            fontFamily = FontFamily(Font(R.font.kurale_regular))
-                        )
+                        Box(
+                            modifier = Modifier.matchParentSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "image request failed.",
+                                fontFamily = FontFamily(Font(R.font.kurale_regular))
+                            )
+                        }
                     }
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(100.dp)
+                        .height(110.dp)
                         .background(
                             brush = Brush.verticalGradient(
                                 listOf(
@@ -114,20 +120,18 @@ fun TopBar(
         }
         Row(
             modifier = Modifier
-                .height(150.dp)
                 .fillMaxWidth()
                 .align(Alignment.BottomStart)
         ) {
             Surface(
                 modifier = Modifier
-                    .width(160.dp)
                     .padding(horizontal = 16.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
                 CoilImage(
                     imageModel = { gameDetails.backgroundImage },
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .size(140.dp, 155.dp),
                     imageOptions = ImageOptions(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.Center,

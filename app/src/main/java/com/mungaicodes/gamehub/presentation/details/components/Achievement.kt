@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
@@ -32,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mungaicodes.gamehub.R
@@ -62,17 +64,16 @@ fun Achievement(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Surface(
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier.wrapContentSize(),
                     shape = MaterialTheme.shapes.small
                 ) {
                     CoilImage(
                         imageModel = { achievement.image },
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.size(60.dp),
                         imageOptions = ImageOptions(
-                            contentScale = ContentScale.Crop,
                             alignment = Alignment.Center,
-                            contentDescription = achievement.name
+                            contentDescription = achievement.name,
+                            contentScale = ContentScale.Crop
                         ),
                         loading = {
                             Box(modifier = Modifier.matchParentSize()) {
@@ -84,10 +85,12 @@ fun Achievement(
                             }
                         },
                         failure = {
-                            Text(
-                                text = "image request failed.",
-                                fontFamily = FontFamily(Font(R.font.kurale_regular))
-                            )
+                            Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "image request failed.",
+                                    fontFamily = FontFamily(Font(R.font.kurale_regular))
+                                )
+                            }
                         }
                     )
                 }

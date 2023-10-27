@@ -1,6 +1,7 @@
 package com.mungaicodes.gamehub.domain.repo
 
 import com.mungaicodes.gamehub.domain.model.Achievement
+import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.Screenshot
@@ -16,4 +17,5 @@ interface NetworkRepository {
     fun getGameDetails(gameId: String): Flow<Resource<GameDetails>>
     fun getGameScreenShots(gameSlug: String): Flow<Resource<List<Screenshot>>>
     fun getGameAchievements(gameSlug: String) : Flow<Resource<List<Achievement>>>
+    fun getDevelopmentTeam(gameSlug: String) : Flow<Resource<List<Creator>>>
 }

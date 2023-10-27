@@ -30,5 +30,11 @@ data class GameDetails(
     val metacriticUrl: String,
     @field:Json(name = "esrb_rating")
     val esrbRating: Esrb?,
-    val platforms: List<Platform>
+    val platforms: List<Platform>,
+    @field:Json(name = "alternative_names")
+    val alternativeNames: List<String>,
+    @field:Json(name = "suggestions_count")
+    val suggestionsCount: Int,
+    @field:Json(name = "ratings_count")
+    val ratingsCount: Int
 )

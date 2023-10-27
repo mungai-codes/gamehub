@@ -1,6 +1,7 @@
 package com.mungaicodes.gamehub.presentation.details
 
 import com.mungaicodes.gamehub.domain.model.Achievement
+import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
 import com.mungaicodes.gamehub.domain.model.Screenshot
@@ -13,5 +14,6 @@ data class DetailsScreenUiState(
     val screenShots: List<Screenshot> = emptyList(),
     val achievements: List<Achievement> = emptyList(),
     val relatedGames: List<Game> = emptyList(),
-    val additions: List<Game> = emptyList()
+    val additions: List<Game> = emptyList(),
+    val creators: List<Creator> = emptyList(),
 )
