@@ -8,7 +8,7 @@ data class Game(
     val slug: String,
     val name: String,
     @field:Json(name = "background_image")
-    val backgroundImage: String?,
+    val backgroundImage: String,
     val rating: Double,
     val playtime: Int,
     @field:Json(name = "esrb_rating")

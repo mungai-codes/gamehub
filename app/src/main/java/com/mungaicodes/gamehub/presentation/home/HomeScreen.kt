@@ -14,6 +14,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,10 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mungaicodes.gamehub.R
-import com.mungaicodes.gamehub.presentation.home.components.PopularGame
-import com.mungaicodes.gamehub.presentation.home.components.PopularGameShimmer
+import com.mungaicodes.gamehub.presentation.components.ColumnItemsShimmer
 import com.mungaicodes.gamehub.presentation.components.GameCard
 import com.mungaicodes.gamehub.presentation.components.GameCardShimmer
+import com.mungaicodes.gamehub.presentation.home.components.PopularGame
 import com.mungaicodes.gamehub.presentation.navigation.Screens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -52,6 +56,10 @@ fun HomeScreen(
                 }
             }
         }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getFavouriteGames()
     }
 
     HomeScreenContent(state, viewModel::onEvent)
@@ -111,14 +119,17 @@ fun HomeScreenContent(
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        if (state.error == null) {
+                        if (state.trendingGamesError == null) {
                             LazyRow(
                                 modifier = Modifier.fillMaxWidth(),
                                 contentPadding = PaddingValues(horizontal = 16.dp),
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(state.trendingGames, key = { it.id }) { game ->
-                                    GameCard(game = game) {
+                                    GameCard(
+                                        name = game.name,
+                                        backgroundImage = game.backgroundImage
+                                    ) {
                                         onEvent(HomeScreenEvent.OnGameClick(game.slug))
                                     }
                                 }
@@ -128,14 +139,25 @@ fun HomeScreenContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                                    .height(200.dp)
+                                    .height(200.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = state.error,
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryTrendingLoad) }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.RestartAlt,
+                                            contentDescription = null
+                                        )
+                                    }
+                                    Text(
+                                        text = state.trendingGamesError,
+                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }
@@ -143,7 +165,7 @@ fun HomeScreenContent(
             }
 
             item {
-                PopularGameShimmer(isLoading = state.loadingPopularGames) {
+                ColumnItemsShimmer(isLoading = state.loadingPopularGames) {
 
                     Column(
                         modifier = Modifier.fillMaxWidth()
@@ -158,7 +180,7 @@ fun HomeScreenContent(
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        if (state.error == null) {
+                        if (state.popularGamesError == null) {
                             Column(
                                 Modifier.padding(horizontal = 16.dp),
                                 verticalArrangement = Arrangement
@@ -175,14 +197,25 @@ fun HomeScreenContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                                    .height(200.dp)
+                                    .height(200.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = state.error,
-                                    modifier = Modifier.align(Alignment.Center),
-                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryPopularLoad) }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.RestartAlt,
+                                            contentDescription = null
+                                        )
+                                    }
+                                    Text(
+                                        text = state.popularGamesError,
+                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }
@@ -190,19 +223,68 @@ fun HomeScreenContent(
             }
 
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
+                GameCardShimmer(
+                    isLoading = state.loadingFavouriteGames
                 ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(
-                            text = "Your faves",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(
+                                text = "Your faves",
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (state.favouriteGamesError == null) {
+                            if (state.favouriteGames.isNotEmpty()) {
+                                LazyRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.favouriteGames, key = { it.slug }) { game ->
+                                        GameCard(
+                                            name = game.name,
+                                            backgroundImage = game.imageUrl
+                                        ) {
+                                            onEvent(HomeScreenEvent.OnGameClick(game.slug))
+                                        }
+                                    }
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    Text(
+                                        text = "No favourite games added",
+                                        modifier = Modifier.align(Alignment.Center),
+                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                                    .height(200.dp)
+                            ) {
+                                Text(
+                                    text = state.favouriteGamesError,
+                                    modifier = Modifier.align(Alignment.Center),
+                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 

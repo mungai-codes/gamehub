@@ -2,9 +2,11 @@ package com.mungaicodes.gamehub.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mungaicodes.gamehub.domain.repo.LocalRepository
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val networkRepository: NetworkRepository
+    private val networkRepository: NetworkRepository,
+    private val localRepository: LocalRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeScreenUiState())
@@ -29,6 +32,7 @@ class HomeViewModel @Inject constructor(
     init {
         getTrendingGames()
         getPopularGames()
+        getFavouriteGames()
     }
 
     fun onEvent(event: HomeScreenEvent) {
@@ -37,6 +41,13 @@ class HomeViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(HomeScreenUiEvent.NavigateToDetails(event.gameId))
                 }
+            }
+
+            HomeScreenEvent.RetryPopularLoad -> {
+                getPopularGames()
+            }
+            HomeScreenEvent.RetryTrendingLoad -> {
+                getTrendingGames()
             }
         }
     }
@@ -49,13 +60,13 @@ class HomeViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 loadingTrendingGames = false,
-                                error = result.message
+                                trendingGamesError = result.message
                             )
                         }
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loadingTrendingGames = true) }
+                        _state.update { it.copy(loadingTrendingGames = true, trendingGamesError = null) }
                     }
 
                     is Resource.Success -> {
@@ -79,13 +90,13 @@ class HomeViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 loadingPopularGames = false,
-                                error = result.message
+                                popularGamesError = result.message
                             )
                         }
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loadingPopularGames = true) }
+                        _state.update { it.copy(loadingPopularGames = true, popularGamesError = null) }
                     }
 
                     is Resource.Success -> {
@@ -95,6 +106,25 @@ class HomeViewModel @Inject constructor(
                                 popularGames = result.data ?: emptyList()
                             )
                         }
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+    fun getFavouriteGames() {
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.getAllFavouriteGames().onEach { result ->
+                when(result) {
+                    is Resource.Error -> {
+                        _state.update { it.copy(loadingFavouriteGames = false, favouriteGamesError = result.message) }
+                    }
+                    is Resource.Loading -> {
+                        _state.update { it.copy(loadingFavouriteGames = true, favouriteGamesError = null) }
+                    }
+                    is Resource.Success -> {
+                        _state.update { it.copy(loadingFavouriteGames = false, favouriteGames = result.data ?: emptyList()) }
+
                     }
                 }
             }.launchIn(this)

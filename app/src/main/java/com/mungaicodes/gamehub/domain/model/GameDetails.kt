@@ -12,9 +12,9 @@ data class GameDetails(
     val metacritic: Int?,
     val released: String?,
     @field:Json(name = "background_image")
-    val backgroundImage: String?,
+    val backgroundImage: String,
     @field:Json(name = "background_image_additional")
-    val additionalBackgroundImage: String?,
+    val additionalBackgroundImage: String,
     val website: String,
     val rating: Double,
     val playtime: Int,

@@ -3,9 +3,12 @@ package com.mungaicodes.gamehub.presentation.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mungaicodes.gamehub.domain.model.GameDetails
+import com.mungaicodes.gamehub.domain.repo.LocalRepository
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val networkRepository: NetworkRepository
+    private val networkRepository: NetworkRepository,
+    private val localRepository: LocalRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DetailsScreenUiState())
@@ -30,6 +34,7 @@ class DetailsViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<String>("gameId")?.let { gameId ->
+            _state.update { it.copy(gameId = gameId) }
             getGameDetails(gameId)
             getGameScreenShots(gameId)
             getGameAchievements(gameId)
@@ -39,10 +44,20 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
+    private fun reLoadData() {
+        _state.update { it.copy(error = null) }
+        getGameDetails(_state.value.gameId!!)
+        getGameScreenShots(_state.value.gameId!!)
+        getGameAchievements(_state.value.gameId!!)
+        getRelatedGames(_state.value.gameId!!)
+        getAdditions(_state.value.gameId!!)
+        getDevelopmentTeam(_state.value.gameId!!)
+    }
+
     fun onEvent(event: DetailsScreenEvent) {
         when (event) {
             is DetailsScreenEvent.AddGameToFavourites -> {
-
+                addGameToFavourites(event.game)
             }
 
             DetailsScreenEvent.GoBack -> {
@@ -55,6 +70,14 @@ class DetailsViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(DetailsScreenUiEvent.NavigateToDetails(event.gameId))
                 }
+            }
+
+            DetailsScreenEvent.OnRetryLoad -> {
+                reLoadData()
+            }
+
+            is DetailsScreenEvent.RemoveGameFromFavourites -> {
+                removeGameFromFavourites()
             }
         }
     }
@@ -221,6 +244,26 @@ class DetailsViewModel @Inject constructor(
                     }
                 }
             }.launchIn(this)
+        }
+    }
+
+    fun checkIfFavourite() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(isFavourite = localRepository.checkIfGameIsFavourite(_state.value.gameId!!)) }
+        }
+    }
+
+    fun addGameToFavourites(gameDetails: GameDetails) {
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.addGameToFavourites(gameDetails)
+            _state.update { it.copy(isFavourite = true) }
+        }
+    }
+
+    fun removeGameFromFavourites() {
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.removeGameFromFavourites(_state.value.gameId!!)
+            _state.update { it.copy(isFavourite = false) }
         }
     }
 }

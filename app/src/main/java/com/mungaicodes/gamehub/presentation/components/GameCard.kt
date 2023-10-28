@@ -40,7 +40,8 @@ import kotlin.random.Random
 
 @Composable
 fun GameCard(
-    game: Game,
+    name: String,
+    backgroundImage: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -55,11 +56,11 @@ fun GameCard(
             shape = MaterialTheme.shapes.medium
         ) {
             CoilImage(
-                imageModel = { game.backgroundImage },
+                imageModel = { backgroundImage },
                 modifier = Modifier.size(240.dp, 160.dp),
                 imageOptions = ImageOptions(
                     alignment = Alignment.Center,
-                    contentDescription = game.name,
+                    contentDescription = name,
                     contentScale = ContentScale.Crop,
                     requestSize = IntSize(240, 160)
                 ),
@@ -85,7 +86,7 @@ fun GameCard(
             )
         }
         Text(
-            text = game.name,
+            text = name,
             fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
             textAlign = TextAlign.Start,
             maxLines = 1,

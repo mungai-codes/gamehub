@@ -1,6 +1,8 @@
 package com.mungaicodes.gamehub.presentation.details
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,6 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,6 +74,10 @@ fun DetailsScreen(
         }
     }
 
+    LaunchedEffect(key1 = true) {
+        viewModel.checkIfFavourite()
+    }
+
     DetailsScreenContent(state = state, onEvent = viewModel::onEvent)
 }
 
@@ -86,339 +95,385 @@ fun DetailsScreenContent(
         topBar = {
             TopBar(
                 gameDetails = state.gameDetails ?: return@Scaffold,
+                isFavourite = state.isFavourite,
                 modifier = Modifier.padding(bottom = 6.dp),
                 onAddToFavourites = { onEvent(DetailsScreenEvent.AddGameToFavourites(state.gameDetails)) },
+                onRemoveFromFavourites = { onEvent(DetailsScreenEvent.RemoveGameFromFavourites) },
                 onBack = { onEvent(DetailsScreenEvent.GoBack) }
             )
         }
     ) { contentPadding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding()
-                )
         ) {
-            state.gameDetails?.let { game ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (game.alternativeNames.isNotEmpty()) {
-                            Text(
-                                text = game.alternativeNames.joinToString(", "),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        } else {
-                            Text(
-                                text = game.slug,
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                        IconButton(onClick = { /*TODO*/ }) {
+            AnimatedVisibility(visible = state.error != null) {
+                state.error?.let { errorMessage ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.reddit_is_fun),
+                                painter = painterResource(id = R.drawable.data_loading_error),
                                 contentDescription = null,
-                                modifier = Modifier.size(54.dp),
-                                tint = Color(0xFFF76904)
+                                modifier = Modifier.size(300.dp),
+                                tint = MaterialTheme.colorScheme.error
                             )
-                        }
-                    }
-
-                    Divider(
-                        Modifier
-                            .fillMaxWidth(),
-                        thickness = 2.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                LazyColumn(
-                    modifier = Modifier,
-                    state = lazyListState,
-                    contentPadding = PaddingValues(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-
-                    item {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.Top,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Column(horizontalAlignment = Alignment.Start) {
-                                    DataCard(rating = game.rating.toString())
-                                    Text(
-                                        text = "rating",
-                                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.ExtraLight,
-                                        fontSize = 13.sp
-                                    )
-                                }
-                                Column(horizontalAlignment = Alignment.Start) {
-                                    DataCard(rating = game.playtime.toString() + " hours")
-                                    Text(
-                                        text = "playtime",
-                                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.ExtraLight,
-                                        fontSize = 13.sp
-                                    )
-                                }
-                                Column(horizontalAlignment = Alignment.Start) {
-                                    DataCard(rating = game.released ?: "N/A")
-                                    Text(
-                                        text = "release(d)",
-                                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.ExtraLight,
-                                        fontSize = 13.sp
-                                    )
-                                }
-                                Column(horizontalAlignment = Alignment.Start) {
-                                    DataCard(rating = game.esrbRating?.slug ?: "N/A")
-                                    Text(
-                                        text = "esrb-rating",
-                                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                        fontWeight = FontWeight.ExtraLight,
-                                        fontSize = 13.sp
-                                    )
-                                }
+                            Text(
+                                text = errorMessage,
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold
+                            )
+                            IconButton(onClick = { onEvent(DetailsScreenEvent.OnRetryLoad) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.RestartAlt,
+                                    contentDescription = null
+                                )
                             }
-                            Divider(
-                                Modifier.fillMaxWidth(),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
                         }
                     }
-
-                    item {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
+            ) {
+                state.gameDetails?.let { game ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "description",
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            Text(
-                                text = game.description.parseHtml(),
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular))
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier.fillMaxWidth(),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                            if (game.alternativeNames.isNotEmpty()) {
+                                Text(
+                                    text = game.alternativeNames.joinToString(", "),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            } else {
+                                Text(
+                                    text = game.slug,
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.reddit_is_fun),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(54.dp),
+                                    tint = Color(0xFFF76904)
+                                )
+                            }
                         }
+
+                        Divider(
+                            Modifier
+                                .fillMaxWidth(),
+                            thickness = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
 
-                    item {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "platforms",
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            FlowRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    LazyColumn(
+                        modifier = Modifier,
+                        state = lazyListState,
+                        contentPadding = PaddingValues(vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        item {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                game.platforms.forEach { platform ->
-                                    DataCard(rating = platform.platform.name ?: "N/A")
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier.fillMaxWidth(),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "development-team",
-                                modifier = Modifier.padding(start = 16.dp),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                items(state.creators, key = { it.id }) { creator ->
-                                    CreatorCard(creator = creator)
-                                }
-
-                            }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "screenshots",
-                                modifier = Modifier.padding(start = 16.dp),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                items(state.screenShots, key = { it.id }) { screenShot ->
-                                    Screenshot(screenshot = screenShot)
-                                }
-
-                            }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "related-games",
-                                modifier = Modifier.padding(start = 16.dp),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                items(state.relatedGames, key = { it.slug }) { game ->
-                                    GameCard(game = game) {
-                                        onEvent(DetailsScreenEvent.OnGameClick(game.slug))
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.Top,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Column(horizontalAlignment = Alignment.Start) {
+                                        DataCard(rating = game.rating.toString())
+                                        Text(
+                                            text = "rating",
+                                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                            fontWeight = FontWeight.ExtraLight,
+                                            fontSize = 13.sp
+                                        )
+                                    }
+                                    Column(horizontalAlignment = Alignment.Start) {
+                                        DataCard(rating = game.playtime.toString() + " hours")
+                                        Text(
+                                            text = "playtime",
+                                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                            fontWeight = FontWeight.ExtraLight,
+                                            fontSize = 13.sp
+                                        )
+                                    }
+                                    Column(horizontalAlignment = Alignment.Start) {
+                                        DataCard(rating = game.released ?: "N/A")
+                                        Text(
+                                            text = "release(d)",
+                                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                            fontWeight = FontWeight.ExtraLight,
+                                            fontSize = 13.sp
+                                        )
+                                    }
+                                    Column(horizontalAlignment = Alignment.Start) {
+                                        DataCard(rating = game.esrbRating?.slug ?: "N/A")
+                                        Text(
+                                            text = "esrb-rating",
+                                            fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                            fontWeight = FontWeight.ExtraLight,
+                                            fontSize = 13.sp
+                                        )
                                     }
                                 }
-
+                                Divider(
+                                    Modifier.fillMaxWidth(),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
                         }
-                    }
 
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "additions/dlc",
-                                modifier = Modifier.padding(start = 16.dp),
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        item {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                items(state.additions, key = { it.slug }) { game ->
-                                    GameCard(game = game) {
-                                        onEvent(DetailsScreenEvent.OnGameClick(game.slug))
+                                Text(
+                                    text = "description",
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                Text(
+                                    text = game.description.parseHtml(),
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular))
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier.fillMaxWidth(),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                        item {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "platforms",
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    game.platforms.forEach { platform ->
+                                        DataCard(rating = platform.platform.name ?: "N/A")
                                     }
                                 }
-
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier.fillMaxWidth(),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
                         }
-                    }
 
+                        item {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "development-team",
+                                    modifier = Modifier.padding(start = 16.dp),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.creators, key = { it.id }) { creator ->
+                                        CreatorCard(creator = creator)
+                                    }
 
-                    item {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = "in-game achievements",
-                                fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                                fontWeight = FontWeight.Light
-                            )
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                state.achievements.forEach { achievement ->
-                                    Achievement(achievement = achievement)
                                 }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             }
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Divider(
-                                Modifier.fillMaxWidth(),
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
                         }
-                    }
 
+                        item {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "screenshots",
+                                    modifier = Modifier.padding(start = 16.dp),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.screenShots, key = { it.id }) { screenShot ->
+                                        Screenshot(screenshot = screenShot)
+                                    }
+
+                                }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                        item {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "related-games",
+                                    modifier = Modifier.padding(start = 16.dp),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.relatedGames, key = { it.slug }) { game ->
+                                        GameCard(
+                                            name = game.name,
+                                            backgroundImage = game.backgroundImage
+                                        ) {
+                                            onEvent(DetailsScreenEvent.OnGameClick(game.slug))
+                                        }
+                                    }
+
+                                }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                        item {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "additions/dlc",
+                                    modifier = Modifier.padding(start = 16.dp),
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.additions, key = { it.slug }) { game ->
+                                        GameCard(
+                                            name = game.name,
+                                            backgroundImage = game.backgroundImage
+                                        ) {
+                                            onEvent(DetailsScreenEvent.OnGameClick(game.slug))
+                                        }
+                                    }
+
+                                }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+
+                        item {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "in-game achievements",
+                                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                                    fontWeight = FontWeight.Light
+                                )
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    state.achievements.forEach { achievement ->
+                                        Achievement(achievement = achievement)
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Divider(
+                                    Modifier.fillMaxWidth(),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                    }
+                }
+            }
+            if (state.loading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
         }

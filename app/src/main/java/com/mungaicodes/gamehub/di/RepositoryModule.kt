@@ -1,6 +1,8 @@
 package com.mungaicodes.gamehub.di
 
+import com.mungaicodes.gamehub.data.repo.LocalRepositoryImpl
 import com.mungaicodes.gamehub.data.repo.NetworkRepositoryImpl
+import com.mungaicodes.gamehub.domain.repo.LocalRepository
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import dagger.Binds
 import dagger.Module
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindsNetworkRepository(
         networkRepositoryImpl: NetworkRepositoryImpl
     ): NetworkRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsLocalRepository(
+        localRepositoryImpl: LocalRepositoryImpl
+    ): LocalRepository
 }

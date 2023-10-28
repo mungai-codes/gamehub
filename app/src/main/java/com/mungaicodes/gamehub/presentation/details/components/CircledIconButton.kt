@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 fun CircledIconButton(
     icon: ImageVector,
     modifier: Modifier = Modifier,
-    tint: Color = MaterialTheme.colorScheme.onBackground,
+    tint: Color = MaterialTheme.colorScheme.onSecondary,
     onClick: () -> Unit
 ) {
 
     Box(
         modifier = modifier
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.background), CircleShape)
-            .background(MaterialTheme.colorScheme.background, CircleShape)
+            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.secondaryContainer), CircleShape)
+            .background(MaterialTheme.colorScheme.secondary, CircleShape)
             .padding(2.dp)
             .clickable { onClick() },
         contentAlignment = Alignment.Center

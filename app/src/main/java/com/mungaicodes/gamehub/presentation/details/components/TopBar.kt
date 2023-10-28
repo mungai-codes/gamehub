@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,8 +38,10 @@ import com.skydoves.landscapist.coil.CoilImage
 @Composable
 fun TopBar(
     gameDetails: GameDetails,
+    isFavourite: Boolean,
     modifier: Modifier = Modifier,
     onAddToFavourites: () -> Unit,
+    onRemoveFromFavourites: () -> Unit,
     onBack: () -> Unit
 ) {
     Box(modifier = modifier.height(240.dp)) {
@@ -114,8 +117,17 @@ fun TopBar(
             CircledIconButton(icon = Icons.Outlined.ArrowBack) {
                 onBack()
             }
-            CircledIconButton(icon = Icons.Outlined.Bookmark) {
-                onAddToFavourites()
+            if (isFavourite) {
+                CircledIconButton(
+                    icon = Icons.Outlined.DeleteSweep
+                ) {
+                    onRemoveFromFavourites()
+                }
+
+            } else {
+                CircledIconButton(icon = Icons.Outlined.Bookmark) {
+                    onAddToFavourites()
+                }
             }
         }
         Row(

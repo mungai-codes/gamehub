@@ -16,4 +16,5 @@ data class DetailsScreenUiState(
     val relatedGames: List<Game> = emptyList(),
     val additions: List<Game> = emptyList(),
     val creators: List<Creator> = emptyList(),
+    val isFavourite: Boolean = false
 )
