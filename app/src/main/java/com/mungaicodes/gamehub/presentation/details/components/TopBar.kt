@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -103,7 +105,27 @@ fun TopBar(
                             )
                         )
                         .align(Alignment.BottomStart)
-                )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .padding(end = 16.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Spacer(modifier = Modifier.weight(0.4f))
+                        Text(
+                            text = gameDetails.name,
+                            modifier = Modifier.weight(0.5f),
+                            fontFamily = FontFamily(Font(R.font.kurale_regular)),
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 22.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
             }
         }
         Row(
@@ -166,21 +188,7 @@ fun TopBar(
                     }
                 )
             }
-            Box(
-                modifier = Modifier
-                    .height(140.dp)
-                    .padding(end = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = gameDetails.name,
-                    fontFamily = FontFamily(Font(R.font.kurale_regular)),
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 22.sp
-                )
-            }
+
         }
     }
 }

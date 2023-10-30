@@ -26,6 +26,14 @@ interface ApiService {
         @Query("ordering") ordering: String = "relevance"
     ): ResponseSchema<Game>
 
+    @GET("games")
+    suspend fun searchForGameByQuery(
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("search") searchQuery: String,
+        @Query("page_size") pageSize: Int = 30,
+        @Query("ordering") ordering: String = "rating"
+    ): ResponseSchema<Game>
+
     @GET("games/{id}")
     suspend fun getGameDetails(
         @Path("id") gameId: String,
@@ -36,7 +44,7 @@ interface ApiService {
     suspend fun getDevelopmentTeam(
         @Path("game_pk") gameSlug: String,
         @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
-        @Query("page_size") pageSize: Int = 20,
+        @Query("page_size") pageSize: Int = 15,
         @Query("ordering") ordering: String = "relevance"
     ): ResponseSchema<Creator>
 
@@ -44,7 +52,7 @@ interface ApiService {
     suspend fun getGameAchievements(
         @Path("id") gameId: String,
         @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
-        @Query("page_size") pageSize: Int = 10,
+        @Query("page_size") pageSize: Int = 15,
         @Query("ordering") ordering: String = "relevance"
     ): ResponseSchema<Achievement>
 

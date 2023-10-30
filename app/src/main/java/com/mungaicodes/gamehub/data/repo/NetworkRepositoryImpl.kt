@@ -58,6 +58,27 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun searchForGameByQuery(searchQuery: String): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading("Loading results..."))
+            try {
+                val response = apiService.searchForGameByQuery(searchQuery = searchQuery)
+                emit(Resource.Success(response.results))
+
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     override fun getRelatedGames(gameSlug: String): Flow<Resource<List<Game>>> {
         return flow {
             emit(Resource.Loading("Loading related games..."))

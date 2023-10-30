@@ -12,10 +12,11 @@ interface NetworkRepository {
 
     fun getTrendingGames(): Flow<Resource<List<Game>>>
     fun getPopularGames(): Flow<Resource<List<Game>>>
+    fun searchForGameByQuery(searchQuery: String): Flow<Resource<List<Game>>>
     fun getRelatedGames(gameSlug: String): Flow<Resource<List<Game>>>
-    fun getAdditions(gameSlug: String) :  Flow<Resource<List<Game>>>
+    fun getAdditions(gameSlug: String): Flow<Resource<List<Game>>>
     fun getGameDetails(gameId: String): Flow<Resource<GameDetails>>
     fun getGameScreenShots(gameSlug: String): Flow<Resource<List<Screenshot>>>
-    fun getGameAchievements(gameSlug: String) : Flow<Resource<List<Achievement>>>
-    fun getDevelopmentTeam(gameSlug: String) : Flow<Resource<List<Creator>>>
+    fun getGameAchievements(gameSlug: String): Flow<Resource<List<Achievement>>>
+    fun getDevelopmentTeam(gameSlug: String): Flow<Resource<List<Creator>>>
 }

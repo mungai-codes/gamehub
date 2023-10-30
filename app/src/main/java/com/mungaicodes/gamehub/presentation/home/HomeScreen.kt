@@ -139,7 +139,7 @@ fun HomeScreenContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                                    .height(200.dp),
+                                    .height(100.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(
@@ -154,64 +154,6 @@ fun HomeScreenContent(
                                     }
                                     Text(
                                         text = state.trendingGamesError,
-                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            item {
-                ColumnItemsShimmer(isLoading = state.loadingPopularGames) {
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(
-                                text = "all-time Popular",
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        if (state.popularGamesError == null) {
-                            Column(
-                                Modifier.padding(horizontal = 16.dp),
-                                verticalArrangement = Arrangement
-                                    .spacedBy(6.dp)
-                            ) {
-                                state.popularGames.take(5).forEach { game ->
-                                    PopularGame(game = game) {
-                                        onEvent(HomeScreenEvent.OnGameClick(game.slug))
-                                    }
-                                }
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .height(200.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryPopularLoad) }) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.RestartAlt,
-                                            contentDescription = null
-                                        )
-                                    }
-                                    Text(
-                                        text = state.popularGamesError,
                                         fontFamily = FontFamily(Font(R.font.pixelifysans)),
                                         fontWeight = FontWeight.Bold
                                     )
@@ -246,7 +188,7 @@ fun HomeScreenContent(
                                     contentPadding = PaddingValues(horizontal = 16.dp),
                                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    items(state.favouriteGames, key = { it.slug }) { game ->
+                                    items(state.favouriteGames, key = { it.id }) { game ->
                                         GameCard(
                                             name = game.name,
                                             backgroundImage = game.imageUrl
@@ -282,6 +224,64 @@ fun HomeScreenContent(
                                     fontFamily = FontFamily(Font(R.font.pixelifysans)),
                                     fontWeight = FontWeight.Bold
                                 )
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                ColumnItemsShimmer(isLoading = state.loadingPopularGames) {
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(
+                                text = "all-time Popular",
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (state.popularGamesError == null) {
+                            Column(
+                                Modifier.padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement
+                                    .spacedBy(8.dp)
+                            ) {
+                                state.popularGames.forEach { game ->
+                                    PopularGame(game = game) {
+                                        onEvent(HomeScreenEvent.OnGameClick(game.slug))
+                                    }
+                                }
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                                    .height(100.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryPopularLoad) }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.RestartAlt,
+                                            contentDescription = null
+                                        )
+                                    }
+                                    Text(
+                                        text = state.popularGamesError,
+                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }

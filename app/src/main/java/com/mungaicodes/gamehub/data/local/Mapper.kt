@@ -5,6 +5,7 @@ import com.mungaicodes.gamehub.domain.model.GameDetails
 
 fun GameDetails.toFavouriteGame(): FavouriteGame {
     return FavouriteGame(
+        id = id,
         slug = slug,
         name = name,
         imageUrl = backgroundImage,

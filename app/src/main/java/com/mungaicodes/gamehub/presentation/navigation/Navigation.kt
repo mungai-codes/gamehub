@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mungaicodes.gamehub.presentation.details.DetailsScreen
 import com.mungaicodes.gamehub.presentation.home.HomeScreen
+import com.mungaicodes.gamehub.presentation.search.SearchScreen
 
 @Composable
 fun Navigation(
@@ -44,9 +45,7 @@ fun NavGraphBuilder.bottomBarGraph(navController: NavController) {
         }
 
         composable(route = BottomNavigationItem.Search.route) {
-            Column(modifier = Modifier.fillMaxSize()) {
-
-            }
+            SearchScreen(navController = navController)
         }
 
         composable(route = BottomNavigationItem.Settings.route) {

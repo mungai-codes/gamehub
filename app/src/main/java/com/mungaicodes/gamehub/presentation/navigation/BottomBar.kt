@@ -1,5 +1,10 @@
 package com.mungaicodes.gamehub.presentation.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -31,8 +36,14 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    if (items.any { it.route == currentDestination?.route }) {
-        NavigationBar(modifier = modifier) {
+    AnimatedVisibility(
+        visible = items.any { it.route == currentDestination?.route },
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = shrinkOut() + fadeOut()
+    ) {
+        NavigationBar(
+            modifier = modifier
+        ) {
 
             items.forEach { screen ->
                 NavigationBarItem(
@@ -54,7 +65,8 @@ fun BottomAppBar(
                             text = screen.label,
                             fontFamily = FontFamily(Font(R.font.pixelifysans))
                         )
-                    }
+                    },
+                    alwaysShowLabel = currentDestination?.hierarchy?.any { it.route == screen.route } == true
                 )
             }
         }
