@@ -1,5 +1,6 @@
 package com.mungaicodes.gamehub.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -45,36 +45,42 @@ fun ResultGridItem(
             Modifier
                 .wrapContentSize()
                 .clickable { onClick() },
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
-            CoilImage(
-                imageModel = { imageUrl },
-                modifier = Modifier.height(240.dp),
-                imageOptions = ImageOptions(
-                    alignment = Alignment.Center,
-                    contentDescription = imageUrl,
-                    contentScale = ContentScale.Crop
-                ),
-                loading = {
-                    Box(modifier = Modifier.matchParentSize()) {
-                        CircularProgressIndicator(
-                            Modifier
-                                .align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary
-                        )
+            Box {
+                CoilImage(
+                    imageModel = { imageUrl },
+                    modifier = Modifier.height(240.dp),
+                    imageOptions = ImageOptions(
+                        alignment = Alignment.Center,
+                        contentDescription = imageUrl,
+                        contentScale = ContentScale.Crop
+                    ),
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                Modifier
+                                    .align(Alignment.Center),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    failure = {
+                        Box(
+                            modifier = Modifier.matchParentSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.image_load_error),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
-                },
-                failure = {
-                    Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.Center) {
-                        Image(
-                            painter = painterResource(id = R.drawable.image_load_error),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
-            )
+                )
+            }
         }
         Text(
             text = title,
@@ -97,7 +103,7 @@ fun GridItemShimmer(
         horizontalAlignment = Alignment.Start
     ) {
         Surface(
-            Modifier.height(250.dp),
+            Modifier.height(240.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Box(

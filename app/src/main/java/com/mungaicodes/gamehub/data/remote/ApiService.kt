@@ -30,8 +30,9 @@ interface ApiService {
     suspend fun searchForGameByQuery(
         @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
         @Query("search") searchQuery: String,
+        @Query("search_precise") searchPrecise: Boolean = true,
         @Query("page_size") pageSize: Int = 30,
-        @Query("ordering") ordering: String = "rating"
+        @Query("ordering") ordering: String = "-rating"
     ): ResponseSchema<Game>
 
     @GET("games/{id}")

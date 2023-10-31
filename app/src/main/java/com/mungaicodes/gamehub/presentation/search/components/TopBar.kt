@@ -76,7 +76,7 @@ fun TopBar(
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { /*TODO*/ }, enabled = enabled) {
+                IconButton(onClick = { onSearch() }, enabled = enabled) {
                     Icon(imageVector = Icons.Outlined.Search, contentDescription = null)
                 }
             },

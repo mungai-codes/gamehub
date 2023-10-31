@@ -47,7 +47,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun searchForGame(searchQuery: String) {
+    private fun searchForGame(searchQuery: String) {
         viewModelScope.launch {
             searchJob?.cancel()
             searchJob = networkRepository.searchForGameByQuery(searchQuery).onEach { result ->
