@@ -76,7 +76,10 @@ fun TopBar(
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { onSearch() }, enabled = enabled) {
+                IconButton(onClick = {
+                    onSearch()
+                    focusManager.clearFocus()
+                }, enabled = enabled) {
                     Icon(imageVector = Icons.Outlined.Search, contentDescription = null)
                 }
             },

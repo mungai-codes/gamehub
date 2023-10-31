@@ -28,12 +28,9 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mungaicodes.gamehub.R
-import com.mungaicodes.gamehub.domain.model.Game
-import com.mungaicodes.gamehub.presentation.components.shimmerEffect
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 import kotlin.random.Random
@@ -41,7 +38,7 @@ import kotlin.random.Random
 @Composable
 fun GameCard(
     name: String,
-    backgroundImage: String,
+    backgroundImage: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -73,7 +70,10 @@ fun GameCard(
                     }
                 },
                 failure = {
-                    Box(modifier = Modifier.matchParentSize(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.matchParentSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.image_load_error),
                             contentDescription = null,

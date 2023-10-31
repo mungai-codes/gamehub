@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -38,20 +39,21 @@ fun ResultGridItem(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .width(200.dp)
+            .clickable { onClick() },
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Surface(
             Modifier
-                .wrapContentSize()
-                .clickable { onClick() },
+                .wrapContentSize(),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
             Box {
                 CoilImage(
                     imageModel = { imageUrl },
-                    modifier = Modifier.height(240.dp),
+                    modifier = Modifier.height(200.dp),
                     imageOptions = ImageOptions(
                         alignment = Alignment.Center,
                         contentDescription = imageUrl,
@@ -98,12 +100,13 @@ fun GridItemShimmer(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .width(200.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Surface(
-            Modifier.height(240.dp),
+            Modifier.height(200.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Box(
@@ -113,17 +116,31 @@ fun GridItemShimmer(
             )
         }
         Column {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .shimmerEffect()
-            )
+            Surface(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(end = 6.dp)
+                    .height(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .shimmerEffect()
+                )
+            }
             Spacer(modifier = Modifier.height(2.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .shimmerEffect()
-            )
+            Surface(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(end = 12.dp)
+                    .height(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .shimmerEffect()
+                )
+            }
         }
     }
 }
