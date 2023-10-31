@@ -31,8 +31,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         getTrendingGames()
-        getPopularGames()
         getFavouriteGames()
+        getGenres()
     }
 
     fun onEvent(event: HomeScreenEvent) {
@@ -43,12 +43,49 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            HomeScreenEvent.RetryPopularLoad -> {
-                getPopularGames()
-            }
             HomeScreenEvent.RetryTrendingLoad -> {
                 getTrendingGames()
             }
+
+            is HomeScreenEvent.OnGenreClick -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(HomeScreenUiEvent.NavigateToGenre(event.genreId, event.genre))
+                }
+            }
+
+            HomeScreenEvent.RetryGenreLoad -> {
+                getGenres()
+            }
+        }
+    }
+
+    fun getGenres() {
+        viewModelScope.launch {
+            networkRepository.getGenres().onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                loadingGenres = false,
+                                genresError = result.message
+                            )
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _state.update { it.copy(loadingGenres = true, genresError = null) }
+                    }
+
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                loadingGenres = false,
+                                genres = result.data ?: emptyList()
+                            )
+                        }
+                    }
+                }
+            }.launchIn(this)
         }
     }
 
@@ -66,7 +103,12 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loadingTrendingGames = true, trendingGamesError = null) }
+                        _state.update {
+                            it.copy(
+                                loadingTrendingGames = true,
+                                trendingGamesError = null
+                            )
+                        }
                     }
 
                     is Resource.Success -> {
@@ -82,48 +124,36 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getPopularGames() {
-        viewModelScope.launch {
-            networkRepository.getPopularGames().onEach { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.update {
-                            it.copy(
-                                loadingPopularGames = false,
-                                popularGamesError = result.message
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        _state.update { it.copy(loadingPopularGames = true, popularGamesError = null) }
-                    }
-
-                    is Resource.Success -> {
-                        _state.update {
-                            it.copy(
-                                loadingPopularGames = false,
-                                popularGames = result.data ?: emptyList()
-                            )
-                        }
-                    }
-                }
-            }.launchIn(this)
-        }
-    }
 
     fun getFavouriteGames() {
         viewModelScope.launch(Dispatchers.IO) {
             localRepository.getAllFavouriteGames().onEach { result ->
-                when(result) {
+                when (result) {
                     is Resource.Error -> {
-                        _state.update { it.copy(loadingFavouriteGames = false, favouriteGamesError = result.message) }
+                        _state.update {
+                            it.copy(
+                                loadingFavouriteGames = false,
+                                favouriteGamesError = result.message
+                            )
+                        }
                     }
+
                     is Resource.Loading -> {
-                        _state.update { it.copy(loadingFavouriteGames = true, favouriteGamesError = null) }
+                        _state.update {
+                            it.copy(
+                                loadingFavouriteGames = true,
+                                favouriteGamesError = null
+                            )
+                        }
                     }
+
                     is Resource.Success -> {
-                        _state.update { it.copy(loadingFavouriteGames = false, favouriteGames = result.data ?: emptyList()) }
+                        _state.update {
+                            it.copy(
+                                loadingFavouriteGames = false,
+                                favouriteGames = result.data ?: emptyList()
+                            )
+                        }
 
                     }
                 }

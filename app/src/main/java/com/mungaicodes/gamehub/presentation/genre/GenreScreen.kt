@@ -1,5 +1,6 @@
-package com.mungaicodes.gamehub.presentation.search
+package com.mungaicodes.gamehub.presentation.genre
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,94 +32,96 @@ import com.mungaicodes.gamehub.presentation.components.ResultGrid
 import com.mungaicodes.gamehub.presentation.components.ResultGridItem
 import com.mungaicodes.gamehub.presentation.components.ResultGridShimmer
 import com.mungaicodes.gamehub.presentation.navigation.Screens
-import com.mungaicodes.gamehub.presentation.search.components.TopBar
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SearchScreen(
+fun GenreScreen(
     navController: NavController,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: GenreViewModel = hiltViewModel()
 ) {
-
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is SearchScreenUiEvent.NavigateToDetails -> {
+                is GenreScreenUiEvent.NavigateToDetails -> {
                     navController.navigate(Screens.Details.route + "/${event.gameId}")
                 }
             }
         }
     }
 
-    SearchScreenContent(
+    GenreScreenContent(
         state = viewModel.state.collectAsState().value,
         onEvent = viewModel::onEvent
     )
 }
 
 @Composable
-fun SearchScreenContent(
-    state: SearchScreenUiState,
-    onEvent: (SearchScreenEvent) -> Unit
+fun GenreScreenContent(
+    state: GenreScreenUiState,
+    onEvent: (GenreScreenEvent) -> Unit
 ) {
-
     val lazyListState = rememberLazyListState()
 
     Scaffold(
         topBar = {
-            TopBar(
-                searchQuery = state.searchQuery,
-                enabled = state.searchQuery.isNotBlank(),
-                supportingText = state.supportText,
-                onValueChange = { onEvent(SearchScreenEvent.OnSearchQueryChanged(it)) },
-                onSearch = { onEvent(SearchScreenEvent.OnSearchEvent) }
-            )
+
         }
     ) { contentPadding ->
 
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
                     top = contentPadding.calculateTopPadding(),
                     bottom = contentPadding.calculateBottomPadding()
-                ),
-            state = lazyListState,
-            contentPadding = PaddingValues(vertical = 16.dp)
+                )
         ) {
+            AnimatedVisibility(visible = state.gameError != null) {
+                state.gameError?.let { error ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            IconButton(onClick = { onEvent(GenreScreenEvent.OnRetryClick) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.RestartAlt,
+                                    contentDescription = null
+                                )
+                            }
+                            Text(
+                                text = error,
+                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding()
+                    ),
+                state = lazyListState,
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
 
-            item {
-                ResultGridShimmer(isLoading = state.loading) {
-                    if (state.searchError == null) {
-                        ResultGrid(items = state.searchResults) { game ->
+                item {
+                    ResultGridShimmer(isLoading = state.loading) {
+
+                        ResultGrid(items = state.games) { game ->
                             ResultGridItem(
                                 title = game.name,
                                 imageUrl = game.backgroundImage,
                                 modifier = Modifier.width(160.dp),
-                                onClick = { onEvent(SearchScreenEvent.OnGameClick(game.slug)) })
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                IconButton(onClick = { onEvent(SearchScreenEvent.OnSearchEvent) }) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.RestartAlt,
-                                        contentDescription = null
-                                    )
-                                }
-                                Text(
-                                    text = state.searchError,
-                                    fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
+                                onClick = { onEvent(GenreScreenEvent.OnGameClick(game.slug)) })
                         }
                     }
                 }

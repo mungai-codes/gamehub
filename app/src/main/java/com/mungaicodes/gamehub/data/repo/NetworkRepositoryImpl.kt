@@ -5,6 +5,7 @@ import com.mungaicodes.gamehub.domain.model.Achievement
 import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
+import com.mungaicodes.gamehub.domain.model.Genre
 import com.mungaicodes.gamehub.domain.model.Screenshot
 import com.mungaicodes.gamehub.domain.repo.NetworkRepository
 import com.mungaicodes.gamehub.util.Resource
@@ -188,6 +189,66 @@ class NetworkRepositoryImpl @Inject constructor(
             emit(Resource.Loading("Loading creators..."))
             try {
                 val response = apiService.getDevelopmentTeam(gameSlug)
+                emit(Resource.Success(response.results))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGenres(): Flow<Resource<List<Genre>>> {
+        return flow {
+            emit(Resource.Loading("Loading genres..."))
+            try {
+                val response = apiService.getGenres()
+                emit(Resource.Success(response.results))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGenreDetails(genreId: Int): Flow<Resource<Genre>> {
+        return flow {
+            emit(Resource.Loading("Loading genre details..."))
+            try {
+                val response = apiService.getGenreDetails(genreId)
+                emit(Resource.Success(response))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is IOException -> emit(Resource.Error("Internet connection not available!"))
+                    is HttpException -> emit(Resource.Error("There is a problem with the server!"))
+                    else -> emit(
+                        Resource.Error(
+                            throwable.message ?: "An unexpected error occurred"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    override fun getGamesByGenre(genre: String): Flow<Resource<List<Game>>> {
+        return flow {
+            emit(Resource.Loading("Loading games..."))
+            try {
+                val response = apiService.getGamesByGenre(genre = genre)
                 emit(Resource.Success(response.results))
             } catch (throwable: Throwable) {
                 when (throwable) {

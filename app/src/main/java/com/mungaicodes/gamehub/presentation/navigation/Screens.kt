@@ -16,4 +16,16 @@ sealed class Screens(val route: String) {
             }
         )
     }
+
+    data object Genre : Screens("genre_screen") {
+        val routeWithArgs = "genre_screen/{genreId}/{genre}"
+        val arguments = listOf(
+            navArgument("genreId") {
+                type = NavType.IntType
+            },
+            navArgument("genre") {
+                type = NavType.StringType
+            }
+        )
+    }
 }

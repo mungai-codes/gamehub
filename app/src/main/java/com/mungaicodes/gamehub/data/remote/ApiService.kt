@@ -4,6 +4,7 @@ import com.mungaicodes.gamehub.domain.model.Achievement
 import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game
 import com.mungaicodes.gamehub.domain.model.GameDetails
+import com.mungaicodes.gamehub.domain.model.Genre
 import com.mungaicodes.gamehub.domain.model.ResponseSchema
 import com.mungaicodes.gamehub.domain.model.Screenshot
 import retrofit2.http.GET
@@ -80,5 +81,25 @@ interface ApiService {
         @Query("page_size") pageSize: Int = 5,
         @Query("ordering") ordering: String = "relevance"
     ): ResponseSchema<Screenshot>
+
+    @GET("genres")
+    suspend fun getGenres(
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 20,
+    ): ResponseSchema<Genre>
+
+    @GET("genres/{id}")
+    suspend fun getGenreDetails(
+        @Path("id") genreId: Int,
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4"
+    ): Genre
+
+    @GET("games")
+    suspend fun getGamesByGenre(
+        @Query("key") apiKey: String = "b1213303647c4ba5b91c5194dd33a9d4",
+        @Query("page_size") pageSize: Int = 30,
+        @Query("genres") genre: String,
+        @Query("ordering") ordering: String = "relevance"
+    ): ResponseSchema<Game>
 }
 

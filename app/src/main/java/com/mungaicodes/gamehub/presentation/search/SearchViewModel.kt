@@ -61,12 +61,22 @@ class SearchViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        _state.update {
-                            it.copy(
-                                loading = false,
-                                searchResults = result.data ?: emptyList(),
-                                supportText = "Showing results for $searchQuery"
-                            )
+                        if (result.data?.isNotEmpty() == true) {
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    searchResults = result.data ?: emptyList(),
+                                    supportText = "Showing results for $searchQuery"
+                                )
+                            }
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    searchResults = emptyList(),
+                                    supportText = "No results found"
+                                )
+                            }
                         }
                     }
                 }

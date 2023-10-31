@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mungaicodes.gamehub.presentation.details.DetailsScreen
+import com.mungaicodes.gamehub.presentation.genre.GenreScreen
 import com.mungaicodes.gamehub.presentation.home.HomeScreen
 import com.mungaicodes.gamehub.presentation.search.SearchScreen
 
@@ -32,6 +33,14 @@ fun Navigation(
         ) {
             DetailsScreen(navController = navController)
         }
+
+        composable(
+            route = Screens.Genre.routeWithArgs,
+            arguments = Screens.Genre.arguments
+        ) {
+            GenreScreen(navController = navController)
+        }
+
     }
 }
 

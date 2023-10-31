@@ -3,6 +3,8 @@ package com.mungaicodes.gamehub.presentation.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,10 +36,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mungaicodes.gamehub.R
-import com.mungaicodes.gamehub.presentation.components.ColumnItemsShimmer
 import com.mungaicodes.gamehub.presentation.components.GameCard
 import com.mungaicodes.gamehub.presentation.components.GameCardShimmer
-import com.mungaicodes.gamehub.presentation.home.components.PopularGame
+import com.mungaicodes.gamehub.presentation.home.components.GenreCard
+import com.mungaicodes.gamehub.presentation.home.components.GenreCardShimmer
 import com.mungaicodes.gamehub.presentation.navigation.Screens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -54,6 +56,10 @@ fun HomeScreen(
                 is HomeScreenUiEvent.NavigateToDetails -> {
                     navController.navigate(Screens.Details.route + "/${event.gameId}")
                 }
+
+                is HomeScreenUiEvent.NavigateToGenre -> {
+                    navController.navigate(Screens.Genre.route + "/${event.genreId}/${event.genre}")
+                }
             }
         }
     }
@@ -65,6 +71,7 @@ fun HomeScreen(
     HomeScreenContent(state, viewModel::onEvent)
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreenContent(
     state: HomeScreenUiState,
@@ -230,65 +237,43 @@ fun HomeScreenContent(
                 }
             }
 
-//            item {
-//                ColumnItemsShimmer(isLoading = state.loadingPopularGames) {
-//
-//                    Column(
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-//                            Text(
-//                                text = "all-time Popular",
-//                                modifier = Modifier.padding(horizontal = 16.dp),
-//                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
-//                                fontWeight = FontWeight.Bold,
-//                                color = MaterialTheme.colorScheme.primary
-//                            )
-//                        }
-//                        Spacer(modifier = Modifier.height(16.dp))
-//                        if (state.popularGamesError == null) {
-//                            Column(
-//                                Modifier.padding(horizontal = 16.dp),
-//                                verticalArrangement = Arrangement
-//                                    .spacedBy(8.dp)
-//                            ) {
-//                                state.popularGames.forEach { game ->
-//                                    PopularGame(game = game) {
-//                                        onEvent(HomeScreenEvent.OnGameClick(game.slug))
-//                                    }
-//                                }
-//                            }
-//                        } else {
-//                            Box(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(16.dp)
-//                                    .height(100.dp),
-//                                contentAlignment = Alignment.Center
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally,
-//                                    verticalArrangement = Arrangement.spacedBy(6.dp)
-//                                ) {
-//                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryPopularLoad) }) {
-//                                        Icon(
-//                                            imageVector = Icons.Outlined.RestartAlt,
-//                                            contentDescription = null
-//                                        )
-//                                    }
-//                                    Text(
-//                                        text = state.popularGamesError,
-//                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
-//                                        fontWeight = FontWeight.Bold
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            item {
+                GenreCardShimmer(isLoading = state.loadingGenres) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Genres",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            state.genres.forEach { genre ->
+                                GenreCard(
+                                    genre = genre,
+                                    onClick = {
+                                        onEvent(
+                                            HomeScreenEvent.OnGenreClick(
+                                                genre.id,
+                                                genre.name
+                                            )
+                                        )
+                                    })
+                            }
+                        }
+                    }
+                }
 
+            }
         }
-
     }
 }
