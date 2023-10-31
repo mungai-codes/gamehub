@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,7 +21,7 @@ import com.mungaicodes.gamehub.R
 fun DataCard(
     rating: String,
     modifier: Modifier = Modifier,
-    shape: CornerBasedShape= MaterialTheme.shapes.small
+    shape: CornerBasedShape = MaterialTheme.shapes.small
 ) {
     Box(
         modifier = modifier

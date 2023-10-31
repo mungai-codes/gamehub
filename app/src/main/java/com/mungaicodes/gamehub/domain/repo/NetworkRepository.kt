@@ -20,7 +20,7 @@ interface NetworkRepository {
     fun getGameScreenShots(gameSlug: String): Flow<Resource<List<Screenshot>>>
     fun getGameAchievements(gameSlug: String): Flow<Resource<List<Achievement>>>
     fun getDevelopmentTeam(gameSlug: String): Flow<Resource<List<Creator>>>
-    fun getGenres() : Flow<Resource<List<Genre>>>
-    fun getGenreDetails(genreId: Int) : Flow<Resource<Genre>>
-    fun getGamesByGenre(genre: String) : Flow<Resource<List<Game>>>
+    fun getGenres(): Flow<Resource<List<Genre>>>
+    fun getGenreDetails(genreId: Int): Flow<Resource<Genre>>
+    fun getGamesByGenre(genre: String): Flow<Resource<List<Game>>>
 }

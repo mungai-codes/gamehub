@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -46,14 +45,14 @@ fun ResultGridItem(
     ) {
         Surface(
             Modifier
-                .wrapContentSize(),
+                .height(200.dp),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
             Box {
                 CoilImage(
                     imageModel = { imageUrl },
-                    modifier = Modifier.height(200.dp),
+                    modifier = Modifier.fillMaxSize(),
                     imageOptions = ImageOptions(
                         alignment = Alignment.Center,
                         contentDescription = imageUrl,

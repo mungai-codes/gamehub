@@ -63,10 +63,6 @@ fun DetailsScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                DetailsScreenUiEvent.NavigateBack -> {
-                    navController.popBackStack()
-                }
-
                 is DetailsScreenUiEvent.NavigateToDetails -> {
                     navController.navigate(Screens.Details.route + "/${event.gameId}")
                 }
@@ -99,7 +95,6 @@ fun DetailsScreenContent(
                 modifier = Modifier.padding(bottom = 6.dp),
                 onAddToFavourites = { onEvent(DetailsScreenEvent.AddGameToFavourites(state.gameDetails)) },
                 onRemoveFromFavourites = { onEvent(DetailsScreenEvent.RemoveGameFromFavourites) },
-                onBack = { onEvent(DetailsScreenEvent.GoBack) }
             )
         }
     ) { contentPadding ->

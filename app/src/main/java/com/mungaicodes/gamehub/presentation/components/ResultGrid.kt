@@ -2,11 +2,9 @@ package com.mungaicodes.gamehub.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +18,7 @@ fun <T> ResultGrid(
 ) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
-        modifier = Modifier
+        modifier = modifier
             .height((3 * 270).dp),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)

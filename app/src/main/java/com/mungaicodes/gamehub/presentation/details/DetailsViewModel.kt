@@ -60,12 +60,6 @@ class DetailsViewModel @Inject constructor(
                 addGameToFavourites(event.game)
             }
 
-            DetailsScreenEvent.GoBack -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(DetailsScreenUiEvent.NavigateBack)
-                }
-            }
-
             is DetailsScreenEvent.OnGameClick -> {
                 viewModelScope.launch {
                     _eventFlow.emit(DetailsScreenUiEvent.NavigateToDetails(event.gameId))

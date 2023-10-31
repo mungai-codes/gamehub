@@ -36,7 +36,9 @@ fun CircledIconButton(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(30.dp).padding(6.dp),
+            modifier = Modifier
+                .size(30.dp)
+                .padding(6.dp),
             tint = tint
         )
     }

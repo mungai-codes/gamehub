@@ -4,16 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material3.CircularProgressIndicator
@@ -44,13 +41,14 @@ fun TopBar(
     modifier: Modifier = Modifier,
     onAddToFavourites: () -> Unit,
     onRemoveFromFavourites: () -> Unit,
-    onBack: () -> Unit
 ) {
+
     Box(modifier = modifier.height(240.dp)) {
         Surface(
             modifier = Modifier
-                .wrapContentSize(),
-            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                .fillMaxWidth()
+                .height(220.dp),
+            shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -59,8 +57,7 @@ fun TopBar(
                 CoilImage(
                     imageModel = { gameDetails.additionalBackgroundImage },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp),
+                        .fillMaxSize(),
                     imageOptions = ImageOptions(
                         alignment = Alignment.Center,
                         contentDescription = gameDetails.name,
@@ -89,56 +86,27 @@ fun TopBar(
                 )
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(110.dp)
+                        .fillMaxSize()
                         .background(
-                            brush = Brush.verticalGradient(
+                            brush = Brush.radialGradient(
                                 listOf(
-                                    MaterialTheme.colorScheme.background.copy(0.1f),
-                                    MaterialTheme.colorScheme.background.copy(0.2f),
-                                    MaterialTheme.colorScheme.background.copy(0.3f),
                                     MaterialTheme.colorScheme.background.copy(0.4f),
-                                    MaterialTheme.colorScheme.background.copy(0.6f),
-                                    MaterialTheme.colorScheme.background.copy(0.8f),
-                                    MaterialTheme.colorScheme.background,
+                                    MaterialTheme.colorScheme.background.copy(0.5f),
+                                    MaterialTheme.colorScheme.background.copy(0.6f)
                                 )
                             )
                         )
-                        .align(Alignment.BottomStart)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .padding(end = 16.dp),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Spacer(modifier = Modifier.weight(0.4f))
-                        Text(
-                            text = gameDetails.name,
-                            modifier = Modifier.weight(0.5f),
-                            fontFamily = FontFamily(Font(R.font.kurale_regular)),
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 3,
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 22.sp,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-                }
+                )
             }
         }
         Row(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = 16.dp)
+                .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
-            CircledIconButton(icon = Icons.Outlined.ArrowBack) {
-                onBack()
-            }
             if (isFavourite) {
                 CircledIconButton(
                     icon = Icons.Outlined.DeleteSweep
@@ -155,17 +123,20 @@ fun TopBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomStart)
+                .padding(horizontal = 16.dp)
+                .align(Alignment.BottomStart),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                    .size(140.dp, 160.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
                 CoilImage(
                     imageModel = { gameDetails.backgroundImage },
                     modifier = Modifier
-                        .size(140.dp, 155.dp),
+                        .fillMaxSize(),
                     imageOptions = ImageOptions(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.Center,
@@ -188,7 +159,15 @@ fun TopBar(
                     }
                 )
             }
-
+            Text(
+                text = gameDetails.name,
+                fontFamily = FontFamily(Font(R.font.kurale_regular)),
+                fontWeight = FontWeight.Bold,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 22.sp,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

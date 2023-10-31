@@ -6,5 +6,5 @@ import com.mungaicodes.gamehub.domain.model.FavouriteGame
 
 @Database(entities = [FavouriteGame::class], version = 1)
 abstract class GameHubDatabase : RoomDatabase() {
-    abstract fun gameDao() : GameDao
+    abstract fun gameDao(): GameDao
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -89,11 +90,12 @@ fun HomeScreenContent(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Text(
-                    text = " Game + Hub",
+                    text = " Game Hub",
                     fontFamily = FontFamily(Font(R.font.pixelifysans)),
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    textDecoration = TextDecoration.Underline
                 )
             }
         }
@@ -264,7 +266,7 @@ fun HomeScreenContent(
                                         onEvent(
                                             HomeScreenEvent.OnGenreClick(
                                                 genre.id,
-                                                genre.name
+                                                genre.slug
                                             )
                                         )
                                     })

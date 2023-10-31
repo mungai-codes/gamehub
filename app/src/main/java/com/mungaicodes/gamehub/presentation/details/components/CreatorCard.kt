@@ -86,7 +86,7 @@ fun CreatorCard(
                     shape = CircleShape
                 ) {
                     CoilImage(
-                        imageModel = { creator.image},
+                        imageModel = { creator.image },
                         modifier = Modifier
                             .matchParentSize(),
                         imageOptions = ImageOptions(

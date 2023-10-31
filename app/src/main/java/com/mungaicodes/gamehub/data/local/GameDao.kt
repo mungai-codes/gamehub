@@ -24,6 +24,7 @@ interface GameDao {
 
     @Query("SELECT * FROM favourite_games WHERE slug = :slug")
     fun getFavouriteGameBySlug(slug: String): FavouriteGame
+
     @Query("SELECT EXISTS (SELECT 1 FROM favourite_games WHERE slug = :slug)")
     fun exists(slug: String): Boolean
 }

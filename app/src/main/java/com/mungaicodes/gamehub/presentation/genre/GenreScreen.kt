@@ -31,6 +31,7 @@ import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.components.ResultGrid
 import com.mungaicodes.gamehub.presentation.components.ResultGridItem
 import com.mungaicodes.gamehub.presentation.components.ResultGridShimmer
+import com.mungaicodes.gamehub.presentation.genre.components.TopBar
 import com.mungaicodes.gamehub.presentation.navigation.Screens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -64,44 +65,13 @@ fun GenreScreenContent(
 
     Scaffold(
         topBar = {
-
+            TopBar(genre = state.genre ?: return@Scaffold)
         }
     ) { contentPadding ->
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding()
-                )
+            Modifier.fillMaxSize()
         ) {
-            AnimatedVisibility(visible = state.gameError != null) {
-                state.gameError?.let { error ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            IconButton(onClick = { onEvent(GenreScreenEvent.OnRetryClick) }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.RestartAlt,
-                                    contentDescription = null
-                                )
-                            }
-                            Text(
-                                text = error,
-                                fontFamily = FontFamily(Font(R.font.pixelifysans)),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -115,7 +85,6 @@ fun GenreScreenContent(
 
                 item {
                     ResultGridShimmer(isLoading = state.loading) {
-
                         ResultGrid(items = state.games) { game ->
                             ResultGridItem(
                                 title = game.name,
@@ -123,6 +92,32 @@ fun GenreScreenContent(
                                 modifier = Modifier.width(160.dp),
                                 onClick = { onEvent(GenreScreenEvent.OnGameClick(game.slug)) })
                         }
+                    }
+                }
+            }
+        }
+        AnimatedVisibility(visible = state.gameError != null) {
+            state.gameError?.let { error ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        IconButton(onClick = { onEvent(GenreScreenEvent.OnRetryClick) }) {
+                            Icon(
+                                imageVector = Icons.Outlined.RestartAlt,
+                                contentDescription = null
+                            )
+                        }
+                        Text(
+                            text = error,
+                            fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

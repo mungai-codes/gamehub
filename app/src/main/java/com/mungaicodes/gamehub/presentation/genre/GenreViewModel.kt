@@ -46,10 +46,9 @@ class GenreViewModel @Inject constructor(
                     _eventFlow.emit(GenreScreenUiEvent.NavigateToDetails(event.gameId))
                 }
             }
+
             GenreScreenEvent.OnRetryClick -> {
-                if (_state.value.genre == null) {
-                    getGenreDetails(_state.value.genreId)
-                }
+                getGenreDetails(_state.value.genreId)
                 getGames(_state.value.currentGenre)
             }
         }
@@ -57,36 +56,42 @@ class GenreViewModel @Inject constructor(
 
     fun getGames(genre: String) {
         viewModelScope.launch {
-            networkRepository.getGamesByGenre(genre.lowercase()).onEach { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.update { it.copy(loadingGames = false, gameError = result.message) }
-                    }
-
-                    is Resource.Loading -> {
-                        _state.update { it.copy(loadingGames = true, gameError = null) }
-                    }
-
-                    is Resource.Success -> {
-                        if (result.data?.isNotEmpty() == true) {
+            networkRepository.getGamesByGenre(genre)
+                .onEach { result ->
+                    when (result) {
+                        is Resource.Error -> {
                             _state.update {
                                 it.copy(
                                     loadingGames = false,
-                                    games = result.data
-                                )
-                            }
-                        } else {
-                            _state.update {
-                                it.copy(
-                                    loadingGames = false,
-                                    games = emptyList(),
-                                    gameError = "Results for ${_state.value.currentGenre} not found"
+                                    gameError = result.message
                                 )
                             }
                         }
+
+                        is Resource.Loading -> {
+                            _state.update { it.copy(loadingGames = true, gameError = null) }
+                        }
+
+                        is Resource.Success -> {
+                            if (result.data?.isNotEmpty() == true) {
+                                _state.update {
+                                    it.copy(
+                                        loadingGames = false,
+                                        games = result.data
+                                    )
+                                }
+                            } else {
+                                _state.update {
+                                    it.copy(
+                                        loadingGames = false,
+                                        games = emptyList(),
+                                        gameError = "Results for ${_state.value.currentGenre} not found"
+                                    )
+                                }
+                            }
+                        }
                     }
-                }
-            }.launchIn(this)
+                }.launchIn(this)
         }
     }
 
