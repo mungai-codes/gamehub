@@ -11,21 +11,21 @@ This is an android application that consumes the [rawg video game api](https://a
 - **Trending Games:** Discover popular and trending games based on the RAWG API data.
 - **Tracking:** Keep track of your favourite games.
 
-##Demo
+## Demo
 
-###Home-Screen
-
-
-###GameDetails-screen
+### Home-Screen
 
 
-###Genre-Screen
+### GameDetails-screen
 
 
-###Search-Screen
+### Genre-Screen
 
 
-###Settings-Screen
+### Search-Screen
 
-##Technology
+
+### Settings-Screen
+
+## Technology
 
