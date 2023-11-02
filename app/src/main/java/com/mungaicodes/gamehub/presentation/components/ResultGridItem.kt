@@ -118,7 +118,7 @@ fun GridItemShimmer(
             Surface(
                 Modifier
                     .fillMaxWidth()
-                    .padding(end = 6.dp)
+                    .padding(end = 16.dp)
                     .height(10.dp)
             ) {
                 Box(
@@ -131,7 +131,7 @@ fun GridItemShimmer(
             Surface(
                 Modifier
                     .fillMaxWidth()
-                    .padding(end = 12.dp)
+                    .padding(end = 32.dp)
                     .height(10.dp)
             ) {
                 Box(

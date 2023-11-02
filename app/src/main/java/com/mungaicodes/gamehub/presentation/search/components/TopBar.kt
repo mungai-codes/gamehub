@@ -52,7 +52,7 @@ fun TopBar(
                 .padding(end = 16.dp), horizontalArrangement = Arrangement.End
         ) {
             Text(
-                text = " Game Search",
+                text = "Game Search",
                 fontFamily = FontFamily(Font(R.font.pixelifysans)),
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp,

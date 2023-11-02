@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,15 +52,20 @@ fun Achievement(
         mutableStateOf(false)
     }
 
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier = modifier
+            .width(115.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         Surface(
-            modifier = modifier,
+            modifier = Modifier,
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primaryContainer)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(70.dp)
                     .padding(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -95,22 +103,6 @@ fun Achievement(
                         }
                     )
                 }
-                Spacer(modifier = Modifier.width(4.dp))
-                Column(modifier = Modifier.weight(0.5f)) {
-                    Text(
-                        text = achievement.name,
-                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = "Completion %: ${achievement.percent ?: "N/A"}",
-                        fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 13.sp
-                    )
-                }
                 Spacer(modifier = Modifier.width(6.dp))
                 IconButton(onClick = { showDescription = !showDescription }) {
                     Icon(
@@ -121,12 +113,29 @@ fun Achievement(
             }
         }
         AnimatedVisibility(visible = showDescription) {
-            Text(
-                text = achievement.description.parseHtml(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                fontFamily = FontFamily(Font(R.font.tiltneon_regular))
-            )
+            Column(
+                Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = achievement.name,
+                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = achievement.description.parseHtml(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.ExtraLight,
+                    textAlign = TextAlign.Start
+                )
+            }
+
         }
     }
 }

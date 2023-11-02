@@ -84,7 +84,7 @@ fun GenreScreenContent(
             ) {
 
                 item {
-                    ResultGridShimmer(isLoading = state.loading) {
+                    ResultGridShimmer(isLoading = state.loadingGames) {
                         ResultGrid(items = state.games) { game ->
                             ResultGridItem(
                                 title = game.name,

@@ -14,6 +14,7 @@ import com.mungaicodes.gamehub.presentation.details.DetailsScreen
 import com.mungaicodes.gamehub.presentation.genre.GenreScreen
 import com.mungaicodes.gamehub.presentation.home.HomeScreen
 import com.mungaicodes.gamehub.presentation.search.SearchScreen
+import com.mungaicodes.gamehub.presentation.settings.SettingsScreen
 
 @Composable
 fun Navigation(
@@ -58,9 +59,7 @@ fun NavGraphBuilder.bottomBarGraph(navController: NavController) {
         }
 
         composable(route = BottomNavigationItem.Settings.route) {
-            Column(modifier = Modifier.fillMaxSize()) {
-
-            }
+            SettingsScreen()
         }
     }
 }

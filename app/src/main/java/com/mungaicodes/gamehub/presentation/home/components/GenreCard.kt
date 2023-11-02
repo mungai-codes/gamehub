@@ -97,7 +97,7 @@ fun GenreCard(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun GenreCardShimmer(
+fun FlowRowShimmer(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit

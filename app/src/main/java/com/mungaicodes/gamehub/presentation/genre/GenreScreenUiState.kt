@@ -5,8 +5,8 @@ import com.mungaicodes.gamehub.domain.model.Genre
 
 data class GenreScreenUiState(
     val genreId: Int = 0,
-    val loading: Boolean = false,
-    val error: String? = null,
+    val loadingGenreDetails: Boolean = false,
+    val genreLoadError: String? = null,
     val genre: Genre? = null,
     val games: List<Game> = emptyList(),
     val loadingGames: Boolean = false,

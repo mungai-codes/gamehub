@@ -92,7 +92,7 @@ fun DetailsScreenContent(
             TopBar(
                 gameDetails = state.gameDetails ?: return@Scaffold,
                 isFavourite = state.isFavourite,
-                modifier = Modifier.padding(bottom = 6.dp),
+                modifier = Modifier.padding(bottom = 2.dp),
                 onAddToFavourites = { onEvent(DetailsScreenEvent.AddGameToFavourites(state.gameDetails)) },
                 onRemoveFromFavourites = { onEvent(DetailsScreenEvent.RemoveGameFromFavourites) },
             )
@@ -175,7 +175,6 @@ fun DetailsScreenContent(
                                 )
                             }
                         }
-
                         Divider(
                             Modifier
                                 .fillMaxWidth(),
@@ -449,17 +448,16 @@ fun DetailsScreenContent(
                                     fontFamily = FontFamily(Font(R.font.tiltneon_regular)),
                                     fontWeight = FontWeight.Light
                                 )
-                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                FlowRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
                                     state.achievements.forEach { achievement ->
                                         Achievement(achievement = achievement)
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Divider(
-                                    Modifier.fillMaxWidth(),
-                                    thickness = 1.dp,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
                             }
                         }
 

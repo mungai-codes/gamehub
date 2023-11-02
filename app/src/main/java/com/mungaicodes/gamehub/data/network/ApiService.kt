@@ -1,4 +1,4 @@
-package com.mungaicodes.gamehub.data.remote
+package com.mungaicodes.gamehub.data.network
 
 import com.mungaicodes.gamehub.domain.model.Achievement
 import com.mungaicodes.gamehub.domain.model.Creator

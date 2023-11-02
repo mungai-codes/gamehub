@@ -100,15 +100,15 @@ class GenreViewModel @Inject constructor(
             networkRepository.getGenreDetails(genreId).onEach { result ->
                 when (result) {
                     is Resource.Error -> {
-                        _state.update { it.copy(loading = false, error = result.message) }
+                        _state.update { it.copy(loadingGenreDetails = false, genreLoadError = result.message) }
                     }
 
                     is Resource.Loading -> {
-                        _state.update { it.copy(loading = true, error = null) }
+                        _state.update { it.copy(loadingGenreDetails = true, genreLoadError = null) }
                     }
 
                     is Resource.Success -> {
-                        _state.update { it.copy(loading = false, genre = result.data) }
+                        _state.update { it.copy(loadingGenreDetails = false, genre = result.data) }
                     }
                 }
             }.launchIn(this)

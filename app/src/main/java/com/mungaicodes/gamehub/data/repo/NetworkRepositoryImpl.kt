@@ -1,6 +1,6 @@
 package com.mungaicodes.gamehub.data.repo
 
-import com.mungaicodes.gamehub.data.remote.ApiService
+import com.mungaicodes.gamehub.data.network.ApiService
 import com.mungaicodes.gamehub.domain.model.Achievement
 import com.mungaicodes.gamehub.domain.model.Creator
 import com.mungaicodes.gamehub.domain.model.Game

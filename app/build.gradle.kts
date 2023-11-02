@@ -3,7 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.protobuf") version "0.9.4"
 }
+
 
 android {
     namespace = "com.mungaicodes.gamehub"
@@ -51,6 +53,23 @@ android {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.24.4"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -65,6 +84,11 @@ dependencies {
 
     //Image Loading
     implementation("com.github.skydoves:landscapist-coil:2.2.10")
+
+    //Proto Datastore
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:3.24.4")
+
 
     //Dependency Injection
     implementation("com.google.dagger:hilt-android:2.48")
@@ -99,6 +123,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
 
 kapt {
     correctErrorTypes = true

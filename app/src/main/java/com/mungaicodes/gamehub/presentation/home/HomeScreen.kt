@@ -40,7 +40,7 @@ import com.mungaicodes.gamehub.R
 import com.mungaicodes.gamehub.presentation.components.GameCard
 import com.mungaicodes.gamehub.presentation.components.GameCardShimmer
 import com.mungaicodes.gamehub.presentation.home.components.GenreCard
-import com.mungaicodes.gamehub.presentation.home.components.GenreCardShimmer
+import com.mungaicodes.gamehub.presentation.home.components.FlowRowShimmer
 import com.mungaicodes.gamehub.presentation.navigation.Screens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -90,7 +90,7 @@ fun HomeScreenContent(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Text(
-                    text = " Game Hub",
+                    text = "Game Hub",
                     fontFamily = FontFamily(Font(R.font.pixelifysans)),
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
@@ -240,7 +240,7 @@ fun HomeScreenContent(
             }
 
             item {
-                GenreCardShimmer(isLoading = state.loadingGenres) {
+                FlowRowShimmer(isLoading = state.loadingGenres) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -252,24 +252,51 @@ fun HomeScreenContent(
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            state.genres.forEach { genre ->
-                                GenreCard(
-                                    genre = genre,
-                                    onClick = {
-                                        onEvent(
-                                            HomeScreenEvent.OnGenreClick(
-                                                genre.id,
-                                                genre.slug
+                        if (state.genresError == null) {
+                            FlowRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                state.genres.forEach { genre ->
+                                    GenreCard(
+                                        genre = genre,
+                                        onClick = {
+                                            onEvent(
+                                                HomeScreenEvent.OnGenreClick(
+                                                    genre.id,
+                                                    genre.slug
+                                                )
                                             )
+                                        })
+                                }
+                            }
+                        }else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                                    .height(100.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    IconButton(onClick = { onEvent(HomeScreenEvent.RetryGenreLoad) }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.RestartAlt,
+                                            contentDescription = null
                                         )
-                                    })
+                                    }
+                                    Text(
+                                        text = state.genresError,
+                                        fontFamily = FontFamily(Font(R.font.pixelifysans)),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }
