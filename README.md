@@ -14,15 +14,19 @@ This is an android application that consumes the [rawg video game api](https://a
 ## Demo
 
 #### homescreen
+
 ![home_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/82105a26-3a7f-44d5-bef1-9f2b27d0a76d)
 
 #### game details
+
 ![game_details_vid](https://github.com/mungai-codes/gamehub/assets/56951481/4caa631e-c20f-4e11-a0ec-e8ce0da551e3)
 
 #### genrescreen
+
 ![genre_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/4db4e6f9-5ebe-49d7-81ac-0fe290d0f278)
 
 #### searchscreen
+
 ![search_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/060b54f1-595c-445f-86e4-99b9a3dbab41)
 
 ### Home-Screen
