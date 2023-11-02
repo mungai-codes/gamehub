@@ -13,22 +13,41 @@ This is an android application that consumes the [rawg video game api](https://a
 
 ## Demo
 
-file:///home/mungai/Pictures/demo_game_hub.mp4
+![home_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/82105a26-3a7f-44d5-bef1-9f2b27d0a76d)
+
+![game_details_vid](https://github.com/mungai-codes/gamehub/assets/56951481/4caa631e-c20f-4e11-a0ec-e8ce0da551e3)
+
+![genre_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/4db4e6f9-5ebe-49d7-81ac-0fe290d0f278)
+
+![search_screen_vid](https://github.com/mungai-codes/gamehub/assets/56951481/060b54f1-595c-445f-86e4-99b9a3dbab41)
 
 ### Home-Screen
 
-![home_screen_gh](https://github.com/mungai-codes/gamehub/assets/56951481/9a1b2ede-1f10-40d6-9cd8-737b88adf9aa)
+![home_screen_pic](https://github.com/mungai-codes/gamehub/assets/56951481/9a1b2ede-1f10-40d6-9cd8-737b88adf9aa)
 
 ### GameDetails-screen
-![gamedetails_gh](https://github.com/mungai-codes/gamehub/assets/56951481/b29d4f3e-da63-4c40-a7bc-b5252e4dd4db)
+
+![gamedetails_pic](https://github.com/mungai-codes/gamehub/assets/56951481/b29d4f3e-da63-4c40-a7bc-b5252e4dd4db)
 
 ### Genre-Screen
 
-file:///home/mungai/AndroidStudioProjects/GameHub/genre_gh.png
+![genre_screen_pic](https://github.com/mungai-codes/gamehub/assets/56951481/23ccafe8-31bc-403f-85ca-56db78631f95)
 
 ### Search-Screen
 
-file:///home/mungai/AndroidStudioProjects/GameHub/search_gh.png
+![search_screen_pic](https://github.com/mungai-codes/gamehub/assets/56951481/315187d1-55ae-4c61-abf1-c341037eb9c6)
 
-## Technology
+## Tech Stack
+
+- **Kotlin:** The programming language used for app development.
+- **Jetpack Compose:** Modern Android UI toolkit for building native UIs.
+- **Hilt:** Dependency injection library for Android.
+- **Landscapist and Coil:** Image loading libraries for efficient image loading.
+- **Proto DataStore:** DataStore is used for data persistence.
+- **Room Library:** Local database for efficient data storage and retrieval.
+- **Coroutines:** Kotlin's coroutine library for asynchronous programming.
+- **Retrofit:** A type-safe HTTP client for Android for API communication.
+- **MVVM (Model-View-ViewModel):** Architectural pattern for separating concerns in the app.
+- **Clean Architecture:** Architectural approach for building scalable and maintainable software.
+
 
